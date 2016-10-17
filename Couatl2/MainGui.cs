@@ -20,5 +20,12 @@ namespace Couatl2
 
 			InitializeComponent();
 		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// The app is designed to save changes immediately so there
+			// is no need for an explicit close here.
+			Application.Exit();
+		}
 	}
 }
