@@ -37,27 +37,27 @@
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.panelAccountList = new System.Windows.Forms.Panel();
-			this.panelPerformanceGraph = new System.Windows.Forms.Panel();
+			this.tabSummary = new System.Windows.Forms.TabPage();
 			this.panelAccountValueChart = new System.Windows.Forms.Panel();
-			this.dataGridViewAccountList = new System.Windows.Forms.DataGridView();
-			this.labelAccountList = new System.Windows.Forms.Label();
-			this.labelPerformance = new System.Windows.Forms.Label();
 			this.labelAccountValue = new System.Windows.Forms.Label();
+			this.panelPerformanceGraph = new System.Windows.Forms.Panel();
+			this.labelPerformance = new System.Windows.Forms.Label();
+			this.panelAccountList = new System.Windows.Forms.Panel();
+			this.labelAccountList = new System.Windows.Forms.Label();
+			this.dataGridViewAccountList = new System.Windows.Forms.DataGridView();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.label2 = new System.Windows.Forms.Label();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.label3 = new System.Windows.Forms.Label();
 			this.MainMenuStrip.SuspendLayout();
 			this.tabControl1.SuspendLayout();
-			this.tabPage1.SuspendLayout();
+			this.tabSummary.SuspendLayout();
+			this.panelAccountValueChart.SuspendLayout();
+			this.panelPerformanceGraph.SuspendLayout();
+			this.panelAccountList.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccountList)).BeginInit();
 			this.tabPage2.SuspendLayout();
 			this.tabPage3.SuspendLayout();
-			this.panelAccountList.SuspendLayout();
-			this.panelPerformanceGraph.SuspendLayout();
-			this.panelAccountValueChart.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccountList)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// MainMenuStrip
@@ -85,25 +85,26 @@
 			// newToolStripMenuItem
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.newToolStripMenuItem.Text = "New";
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.openToolStripMenuItem.Text = "Open";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// closeToolStripMenuItem
 			// 
 			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.closeToolStripMenuItem.Text = "Close";
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -118,12 +119,12 @@
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.aboutToolStripMenuItem.Text = "About";
 			// 
 			// tabControl1
 			// 
-			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabSummary);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -135,57 +136,52 @@
 			this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
 			this.tabControl1.TabIndex = 1;
 			// 
-			// tabPage1
+			// tabSummary
 			// 
-			this.tabPage1.Controls.Add(this.panelAccountValueChart);
-			this.tabPage1.Controls.Add(this.panelPerformanceGraph);
-			this.tabPage1.Controls.Add(this.panelAccountList);
-			this.tabPage1.Location = new System.Drawing.Point(4, 32);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(995, 733);
-			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Summary";
-			this.tabPage1.UseVisualStyleBackColor = true;
+			this.tabSummary.Controls.Add(this.panelAccountValueChart);
+			this.tabSummary.Controls.Add(this.panelPerformanceGraph);
+			this.tabSummary.Controls.Add(this.panelAccountList);
+			this.tabSummary.Location = new System.Drawing.Point(4, 32);
+			this.tabSummary.Name = "tabSummary";
+			this.tabSummary.Padding = new System.Windows.Forms.Padding(3);
+			this.tabSummary.Size = new System.Drawing.Size(995, 733);
+			this.tabSummary.TabIndex = 0;
+			this.tabSummary.Text = "Summary";
+			this.tabSummary.UseVisualStyleBackColor = true;
 			// 
-			// tabPage2
+			// panelAccountValueChart
 			// 
-			this.tabPage2.Controls.Add(this.label2);
-			this.tabPage2.Location = new System.Drawing.Point(4, 32);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(995, 733);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Account";
-			this.tabPage2.UseVisualStyleBackColor = true;
+			this.panelAccountValueChart.Controls.Add(this.labelAccountValue);
+			this.panelAccountValueChart.Location = new System.Drawing.Point(477, 376);
+			this.panelAccountValueChart.Name = "panelAccountValueChart";
+			this.panelAccountValueChart.Size = new System.Drawing.Size(510, 349);
+			this.panelAccountValueChart.TabIndex = 2;
 			// 
-			// tabPage3
+			// labelAccountValue
 			// 
-			this.tabPage3.Controls.Add(this.label3);
-			this.tabPage3.Location = new System.Drawing.Point(4, 32);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(995, 733);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Security";
-			this.tabPage3.UseVisualStyleBackColor = true;
+			this.labelAccountValue.AutoSize = true;
+			this.labelAccountValue.Location = new System.Drawing.Point(6, 4);
+			this.labelAccountValue.Name = "labelAccountValue";
+			this.labelAccountValue.Size = new System.Drawing.Size(145, 23);
+			this.labelAccountValue.TabIndex = 0;
+			this.labelAccountValue.Text = "Account Value";
 			// 
-			// label2
+			// panelPerformanceGraph
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(7, 7);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(68, 23);
-			this.label2.TabIndex = 0;
-			this.label2.Text = "label2";
+			this.panelPerformanceGraph.Controls.Add(this.labelPerformance);
+			this.panelPerformanceGraph.Location = new System.Drawing.Point(476, 7);
+			this.panelPerformanceGraph.Name = "panelPerformanceGraph";
+			this.panelPerformanceGraph.Size = new System.Drawing.Size(513, 362);
+			this.panelPerformanceGraph.TabIndex = 1;
 			// 
-			// label3
+			// labelPerformance
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(9, 4);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(68, 23);
-			this.label3.TabIndex = 0;
-			this.label3.Text = "label3";
+			this.labelPerformance.AutoSize = true;
+			this.labelPerformance.Location = new System.Drawing.Point(3, 4);
+			this.labelPerformance.Name = "labelPerformance";
+			this.labelPerformance.Size = new System.Drawing.Size(129, 23);
+			this.labelPerformance.TabIndex = 0;
+			this.labelPerformance.Text = "Performance";
 			// 
 			// panelAccountList
 			// 
@@ -196,21 +192,14 @@
 			this.panelAccountList.Size = new System.Drawing.Size(461, 718);
 			this.panelAccountList.TabIndex = 0;
 			// 
-			// panelPerformanceGraph
+			// labelAccountList
 			// 
-			this.panelPerformanceGraph.Controls.Add(this.labelPerformance);
-			this.panelPerformanceGraph.Location = new System.Drawing.Point(476, 7);
-			this.panelPerformanceGraph.Name = "panelPerformanceGraph";
-			this.panelPerformanceGraph.Size = new System.Drawing.Size(513, 362);
-			this.panelPerformanceGraph.TabIndex = 1;
-			// 
-			// panelAccountValueChart
-			// 
-			this.panelAccountValueChart.Controls.Add(this.labelAccountValue);
-			this.panelAccountValueChart.Location = new System.Drawing.Point(477, 376);
-			this.panelAccountValueChart.Name = "panelAccountValueChart";
-			this.panelAccountValueChart.Size = new System.Drawing.Size(510, 349);
-			this.panelAccountValueChart.TabIndex = 2;
+			this.labelAccountList.AutoSize = true;
+			this.labelAccountList.Location = new System.Drawing.Point(4, 4);
+			this.labelAccountList.Name = "labelAccountList";
+			this.labelAccountList.Size = new System.Drawing.Size(127, 23);
+			this.labelAccountList.TabIndex = 1;
+			this.labelAccountList.Text = "Account List";
 			// 
 			// dataGridViewAccountList
 			// 
@@ -224,32 +213,44 @@
 			this.dataGridViewAccountList.Size = new System.Drawing.Size(461, 688);
 			this.dataGridViewAccountList.TabIndex = 0;
 			// 
-			// labelAccountList
+			// tabPage2
 			// 
-			this.labelAccountList.AutoSize = true;
-			this.labelAccountList.Location = new System.Drawing.Point(4, 4);
-			this.labelAccountList.Name = "labelAccountList";
-			this.labelAccountList.Size = new System.Drawing.Size(127, 23);
-			this.labelAccountList.TabIndex = 1;
-			this.labelAccountList.Text = "Account List";
+			this.tabPage2.Controls.Add(this.label2);
+			this.tabPage2.Location = new System.Drawing.Point(4, 32);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(995, 733);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Account";
+			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
-			// labelPerformance
+			// label2
 			// 
-			this.labelPerformance.AutoSize = true;
-			this.labelPerformance.Location = new System.Drawing.Point(3, 4);
-			this.labelPerformance.Name = "labelPerformance";
-			this.labelPerformance.Size = new System.Drawing.Size(129, 23);
-			this.labelPerformance.TabIndex = 0;
-			this.labelPerformance.Text = "Performance";
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(7, 7);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(68, 23);
+			this.label2.TabIndex = 0;
+			this.label2.Text = "label2";
 			// 
-			// labelAccountValue
+			// tabPage3
 			// 
-			this.labelAccountValue.AutoSize = true;
-			this.labelAccountValue.Location = new System.Drawing.Point(6, 4);
-			this.labelAccountValue.Name = "labelAccountValue";
-			this.labelAccountValue.Size = new System.Drawing.Size(145, 23);
-			this.labelAccountValue.TabIndex = 0;
-			this.labelAccountValue.Text = "Account Value";
+			this.tabPage3.Controls.Add(this.label3);
+			this.tabPage3.Location = new System.Drawing.Point(4, 32);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(995, 733);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Security";
+			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(9, 4);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(68, 23);
+			this.label3.TabIndex = 0;
+			this.label3.Text = "label3";
 			// 
 			// MainGui
 			// 
@@ -263,18 +264,18 @@
 			this.MainMenuStrip.ResumeLayout(false);
 			this.MainMenuStrip.PerformLayout();
 			this.tabControl1.ResumeLayout(false);
-			this.tabPage1.ResumeLayout(false);
+			this.tabSummary.ResumeLayout(false);
+			this.panelAccountValueChart.ResumeLayout(false);
+			this.panelAccountValueChart.PerformLayout();
+			this.panelPerformanceGraph.ResumeLayout(false);
+			this.panelPerformanceGraph.PerformLayout();
+			this.panelAccountList.ResumeLayout(false);
+			this.panelAccountList.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccountList)).EndInit();
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage3.PerformLayout();
-			this.panelAccountList.ResumeLayout(false);
-			this.panelAccountList.PerformLayout();
-			this.panelPerformanceGraph.ResumeLayout(false);
-			this.panelPerformanceGraph.PerformLayout();
-			this.panelAccountValueChart.ResumeLayout(false);
-			this.panelAccountValueChart.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccountList)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -291,7 +292,7 @@
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.TabControl tabControl1;
-		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabSummary;
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.Panel panelAccountValueChart;

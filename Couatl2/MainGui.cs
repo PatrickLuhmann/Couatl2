@@ -27,5 +27,39 @@ namespace Couatl2
 			// is no need for an explicit close here.
 			Application.Exit();
 		}
+
+		/// <summary>
+		/// Allow the user to select a data file.
+		/// If the file is valid, update the app data and
+		/// switch to the Summary tab.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("File -> Open");
+
+			OpenFileDialog fileDialog = new OpenFileDialog();
+			fileDialog.InitialDirectory = "c:\\";
+			fileDialog.Filter = "XML files|*.xml";
+
+			if (fileDialog.ShowDialog() == DialogResult.OK)
+			{
+				System.Diagnostics.Debug.WriteLine("The user selected the file " + fileDialog.FileName);
+
+				if (AppObj.OpenDbFile(fileDialog.FileName))
+				{
+					UpdateSummaryTab();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Update and switch to the Summary tab.
+		/// </summary>
+		private void UpdateSummaryTab()
+		{
+			tabControl1.SelectedTab = tabSummary;
+		}
 	}
 }
