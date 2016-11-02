@@ -20,7 +20,7 @@ namespace Couatl2
 
 		/// <summary>
 		/// Open the given database file.
-		/// The filename is usuallyprovided by the user, but could also
+		/// The filename is usually provided by the user, but could also
 		/// be stored in a configuration file.
 		/// </summary>
 		/// <param name="filename">The full name of the database file to open.</param>
@@ -120,7 +120,7 @@ namespace Couatl2
 			// TABLE: Transactions
 			DataTable transactions = newDb.Tables.Add("Transactions");
 			transactions.Columns.Add("ID", typeof(UInt32));
-			transactions.PrimaryKey = new DataColumn[] { accounts.Columns["ID"] };
+			transactions.PrimaryKey = new DataColumn[] { transactions.Columns["ID"] };
 			transactions.Columns["ID"].AutoIncrement = true;
 			transactions.Columns["ID"].AutoIncrementSeed = 1;
 			transactions.Columns["ID"].AutoIncrementStep = 1;
@@ -134,7 +134,7 @@ namespace Couatl2
 			// TABLE: Prices
 			DataTable prices = newDb.Tables.Add("Prices");
 			prices.Columns.Add("ID", typeof(UInt32));
-			prices.PrimaryKey = new DataColumn[] { accounts.Columns["ID"] };
+			prices.PrimaryKey = new DataColumn[] { prices.Columns["ID"] };
 			prices.Columns["ID"].AutoIncrement = true;
 			prices.Columns["ID"].AutoIncrementSeed = 1;
 			prices.Columns["ID"].AutoIncrementStep = 1;
@@ -145,7 +145,7 @@ namespace Couatl2
 			// TABLE: Securities
 			DataTable securities = newDb.Tables.Add("Securities");
 			securities.Columns.Add("ID", typeof(UInt32));
-			securities.PrimaryKey = new DataColumn[] { accounts.Columns["ID"] };
+			securities.PrimaryKey = new DataColumn[] { securities.Columns["ID"] };
 			securities.Columns["ID"].AutoIncrement = true;
 			securities.Columns["ID"].AutoIncrementSeed = 1;
 			securities.Columns["ID"].AutoIncrementStep = 1;
@@ -155,7 +155,7 @@ namespace Couatl2
 			// TABLE: LotAssignments
 			DataTable lotAssignments = newDb.Tables.Add("LotAssignments");
 			lotAssignments.Columns.Add("ID", typeof(UInt32));
-			lotAssignments.PrimaryKey = new DataColumn[] { accounts.Columns["ID"] };
+			lotAssignments.PrimaryKey = new DataColumn[] { lotAssignments.Columns["ID"] };
 			lotAssignments.Columns["ID"].AutoIncrement = true;
 			lotAssignments.Columns["ID"].AutoIncrementSeed = 1;
 			lotAssignments.Columns["ID"].AutoIncrementStep = 1;
@@ -185,5 +185,11 @@ namespace Couatl2
 			CurrDataSet = newDb;
 		}
 
+		public DataTable GetAccountListTable()
+		{
+			//DataTable acctList = new DataTable();
+
+			return CurrDataSet.Tables["Accounts"];
+		}
 	}
 }

@@ -59,7 +59,27 @@ namespace Couatl2
 		/// </summary>
 		private void UpdateSummaryTab()
 		{
+			dataGridViewAccountList.DataSource = AppObj.GetAccountListTable();
 			tabControl1.SelectedTab = tabSummary;
+		}
+
+		private void newToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("File -> New");
+
+			SaveFileDialog fileDialog = new SaveFileDialog();
+			fileDialog.InitialDirectory = "c:\\";
+			fileDialog.Filter = "XML files|*.xml";
+			fileDialog.OverwritePrompt = true;
+
+			if (fileDialog.ShowDialog() == DialogResult.OK)
+			{
+				System.Diagnostics.Debug.WriteLine("The user selected the file " + fileDialog.FileName);
+
+				AppObj.CreateNewDbFile(fileDialog.FileName);
+
+				UpdateSummaryTab();
+			}
 		}
 	}
 }
