@@ -187,9 +187,34 @@ namespace Couatl2
 
 		public DataTable GetAccountListTable()
 		{
-			//DataTable acctList = new DataTable();
+			// Start with a copy of the Accounts table.
+			DataTable acctList = CurrDataSet.Tables["Accounts"].Copy();
 
-			return CurrDataSet.Tables["Accounts"];
+			// Add a column for Value.
+			DataColumn value = acctList.Columns.Add("Value");
+			for (int x = 0; x < acctList.Rows.Count; x++)
+			{
+				acctList.Rows[x]["Value"] = x * 2;
+			}
+
+			DataRow[] foundRows = acctList.Select("Institution = 'Scottrade'");
+			foreach (DataRow r in foundRows)
+			{
+				DataRow newRow = acctList.NewRow();
+				// Need to restore ID after we copy the item array; otherwise, we will
+				// get a duplicate row exception when we try to add the row.
+				UInt32 key = Convert.ToUInt32(newRow["ID"]);
+				newRow.ItemArray = r.ItemArray;
+				newRow["ID"] = key;
+				acctList.Rows.Add(newRow);
+			}
+
+			// Remove the ID column because that has no meaning to the user.
+			acctList.PrimaryKey = null;
+			acctList.Columns.Remove("ID");
+
+
+			return acctList;
 		}
 	}
 }
