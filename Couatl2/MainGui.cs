@@ -81,5 +81,58 @@ namespace Couatl2
 				UpdateSummaryTab();
 			}
 		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			// Bring up a PurchaseTransactionDialog.
+			PurchaseTransactionDialog dlg = new PurchaseTransactionDialog();
+			// Fill the account combo box with the account names.
+			dlg.AddAccountName("Account 1");
+			dlg.AddAccountName("Account 2");
+
+			DialogResult result = dlg.ShowDialog();
+
+			// What happens when the dialog is closed?
+			if (result == DialogResult.OK)
+			{
+				System.Diagnostics.Debug.WriteLine("Purchase Transaction Dialog :: Save");
+				System.Diagnostics.Debug.WriteLine("Account: " + dlg.GetAccountName());
+				System.Diagnostics.Debug.WriteLine("Symbol: " + dlg.GetSymbol());
+				System.Diagnostics.Debug.WriteLine("Quantity: " + dlg.GetQuantity());
+				System.Diagnostics.Debug.WriteLine("Cost: " + dlg.GetCost());
+				System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
+
+				decimal quantity;
+				decimal cost;
+
+				// Validate the types of the values that the user provided. 
+				try
+				{
+					quantity = Convert.ToDecimal(dlg.GetQuantity());
+				}
+				catch (System.FormatException ex)
+				{
+					MessageBox.Show("ERROR: Quantity must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+					// TODO: Go back to the purchase dialog so that the user can fix their mistake.
+					return;
+				}
+				try
+				{
+					cost = Convert.ToDecimal(dlg.GetCost());
+				}
+				catch (System.FormatException ex)
+				{
+					MessageBox.Show("ERROR: Cost must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+					// TODO: Go back to the purchase dialog so that the user can fix their mistake.
+					return;
+				}
+
+				DateTime date = dlg.GetDate();
+
+				// Create a new entry in the Transactions table.
+			}
+		}
 	}
 }

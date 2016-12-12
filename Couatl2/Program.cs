@@ -18,6 +18,7 @@ namespace Couatl2
 		{
 			System.Diagnostics.Debug.WriteLine("Welcome to Couatl2.");
 
+#if false
 			// pjl begin test code
 			// based on code from http://csharphelper.com/blog/2015/01/get-stock-prices-from-the-internet-in-c/ 
 			string result;
@@ -29,6 +30,7 @@ namespace Couatl2
 			}
 			System.Diagnostics.Debug.WriteLine(result);
 			// pjl end test code
+#endif
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
