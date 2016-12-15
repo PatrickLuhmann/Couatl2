@@ -4,13 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Runtime.CompilerServices;
+
+// The assembly name is found in AssemblyInfo.cs. This is how
+// C# implements the "friend" concept.
+[assembly: InternalsVisibleTo("UnitTestProject1")]
 
 namespace Couatl2
 {
 	public class Couatl2App
 	{
 		private string CurrDbFilename;
-		private DataSet CurrDataSet;
+		internal DataSet CurrDataSet;
 		private static UInt32 CurrSchemaVersion = 1;
 
 		public Boolean IsDbOpen
@@ -215,6 +220,27 @@ namespace Couatl2
 
 
 			return acctList;
+		}
+
+		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, decimal cost, DateTime date)
+		{
+			// Find the ID of the account.
+			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + accountName + "'");
+			// TODO: This code assumes one row is always returned. What happens if this is not the case?
+			UInt32 acctID = Convert.ToUInt32(foundRows[0]["ID"]);
+
+			// Find the ID of the symbol.
+			foundRows = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
+			UInt32 secID = Convert.ToUInt32(foundRows[0]["ID"]);
+
+			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = 1; // 1 = Buy.
+			newXact["Security"] = secID;
+			newXact["Quantity"] = quantity;
+			newXact["Value"] = cost;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID;
+			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
 		}
 	}
 }
