@@ -60,7 +60,7 @@ namespace Couatl2
 		private void UpdateSummaryTab()
 		{
 			dataGridViewAccountList.DataSource = AppObj.GetAccountListTable();
-			tabControl1.SelectedTab = tabSummary;
+			MainTabControl.SelectedTab = SummaryTab;
 		}
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,53 +86,88 @@ namespace Couatl2
 		{
 			// Bring up a PurchaseTransactionDialog.
 			PurchaseTransactionDialog dlg = new PurchaseTransactionDialog();
-			// Fill the account combo box with the account names.
+			// TODO: Fill the account combo box with the account names.
 			dlg.AddAccountName("Account 1");
 			dlg.AddAccountName("Account 2");
 
-			DialogResult result = dlg.ShowDialog();
-
-			// What happens when the dialog is closed?
-			if (result == DialogResult.OK)
+			do
 			{
-				System.Diagnostics.Debug.WriteLine("Purchase Transaction Dialog :: Save");
-				System.Diagnostics.Debug.WriteLine("Account: " + dlg.GetAccountName());
-				System.Diagnostics.Debug.WriteLine("Symbol: " + dlg.GetSymbol());
-				System.Diagnostics.Debug.WriteLine("Quantity: " + dlg.GetQuantity());
-				System.Diagnostics.Debug.WriteLine("Cost: " + dlg.GetCost());
-				System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
+				DialogResult result = dlg.ShowDialog();
 
-				decimal quantity;
-				decimal cost;
-
-				// Validate the types of the values that the user provided. 
-				try
+				// What happens when the dialog is closed?
+				if (result == DialogResult.OK)
 				{
-					quantity = Convert.ToDecimal(dlg.GetQuantity());
+					System.Diagnostics.Debug.WriteLine("Purchase Transaction Dialog :: Save");
+					System.Diagnostics.Debug.WriteLine("Account: " + dlg.GetAccountName());
+					System.Diagnostics.Debug.WriteLine("Symbol: " + dlg.GetSymbol());
+					System.Diagnostics.Debug.WriteLine("Quantity: " + dlg.GetQuantity());
+					System.Diagnostics.Debug.WriteLine("Cost: " + dlg.GetCost());
+					System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
+
+					decimal quantity;
+					decimal cost;
+
+					// Validate the types of the values that the user provided. 
+					try
+					{
+						quantity = Convert.ToDecimal(dlg.GetQuantity());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Quantity must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+					try
+					{
+						cost = Convert.ToDecimal(dlg.GetCost());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Cost must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+
+					DateTime date = dlg.GetDate();
+
+					string account = dlg.GetAccountName();
+
+					string symbol = dlg.GetSymbol();
+
+					// Create a new entry in the Transactions table.
+					if (AppObj.ProcessPurchaseTransaction(account, symbol, quantity, cost, date))
+						break;
+
+					MessageBox.Show("ERROR: Could not process transaction. Please check for errors in the input data.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
-				catch (System.FormatException ex)
+				else
+					break;
+
+			} while (true);
+
+		}
+
+		private void createAccountToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// Pop up a dialog to ask the user for the name to give the account and the 
+			// name of the financial institution that holds the account.
+			CreateAccountDialog dlg = new CreateAccountDialog();
+			do
+			{
+				DialogResult result = dlg.ShowDialog();
+
+				if (result == DialogResult.OK)
 				{
-					MessageBox.Show("ERROR: Quantity must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					string acct = dlg.GetAccountName();
+					string inst = dlg.GetInstitutionName();
 
-					// TODO: Go back to the purchase dialog so that the user can fix their mistake.
-					return;
-				}
-				try
-				{
-					cost = Convert.ToDecimal(dlg.GetCost());
-				}
-				catch (System.FormatException ex)
-				{
-					MessageBox.Show("ERROR: Cost must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-					// TODO: Go back to the purchase dialog so that the user can fix their mistake.
-					return;
+					System.Diagnostics.Debug.WriteLine("Create Account Dialog :: Create");
+					System.Diagnostics.Debug.WriteLine("Account Name: " + acct);
+					System.Diagnostics.Debug.WriteLine("Institution Name: " + inst);
 				}
 
-				DateTime date = dlg.GetDate();
-
-				// Create a new entry in the Transactions table.
-			}
+			} while (false);
 		}
 	}
 }

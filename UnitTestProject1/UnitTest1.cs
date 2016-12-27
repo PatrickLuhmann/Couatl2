@@ -8,6 +8,9 @@ namespace UnitTestProject1
 	[TestClass]
 	public class UnitTest1
 	{
+		/// <summary>
+		/// A purchase is added to a database that has no transactions.
+		/// </summary>
 		[TestMethod]
 		public void AddPurchase_FirstXact()
 		{

@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Couatl2.cs" />
+    <Compile Include="CreateAccountDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateAccountDialog.Designer.cs">
+      <DependentUpon>CreateAccountDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainGui.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +68,9 @@
     <Compile Include="PurchaseTransactionDialog.Designer.cs">
       <DependentUpon>PurchaseTransactionDialog.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CreateAccountDialog.resx">
+      <DependentUpon>CreateAccountDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainGui.resx">
       <DependentUpon>MainGui.cs</DependentUpon>
     </EmbeddedResource>

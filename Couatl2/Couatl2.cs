@@ -190,6 +190,61 @@ namespace Couatl2
 			CurrDataSet = newDb;
 		}
 
+		/// <summary>
+		/// Return true if 'account' is in the Accounts table; false otherwise
+		/// </summary>
+		/// <param name="account">The Name to look for.</param>
+		/// <returns></returns>
+		internal bool FindAccount(string account)
+		{
+			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + account + "'");
+			if (foundRows.Length == 1)
+				return true;
+			else
+				return false;
+		}
+
+		/// <summary>
+		/// Return true if 'symbol' is in the Securities table; false otherwise
+		/// 
+		/// This function does not try to correct for uppercase/lowercase; that is
+		/// the responsibility of the caller.
+		/// </summary>
+		/// <param name="symbol">The Symbol to look for.</param>
+		/// <returns></returns>
+		internal bool FindSymbol(string symbol)
+		{
+			DataRow[] foundRows = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
+			if (foundRows.Length == 1)
+				return true;
+			else
+				return false;
+		}
+
+		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, decimal cost, DateTime date)
+		{
+			// Verify the account name.
+			if (!FindAccount(account))
+				return false;
+
+			// Verify the symbol.
+			symbol = symbol.ToUpper();
+			if (!FindSymbol(symbol))
+				return false;
+
+			try
+			{
+				AddPurchaseTransaction(account, symbol, quantity, cost, date);
+			}
+			catch
+			{
+				return false;
+			}
+
+			SaveDbFile();
+			return true;
+		}
+
 		public DataTable GetAccountListTable()
 		{
 			// Start with a copy of the Accounts table.
@@ -222,6 +277,20 @@ namespace Couatl2
 			return acctList;
 		}
 
+		/// <summary>
+		/// Add a purchase transaction to the database
+		/// 
+		/// This method does not do any error checking. It assumes that the account and the symbol
+		/// are already present in the database. It assumes that the quantity, cost, and date values
+		/// are reasonable and make sense within the context of the database.
+		/// 
+		/// This method does not catch any exceptions.
+		/// </summary>
+		/// <param name="accountName">The name of the account.</param>
+		/// <param name="symbol">The ticket symbol of the security.</param>
+		/// <param name="quantity">The number of shares of the security.</param>
+		/// <param name="cost">The total cost of the security.</param>
+		/// <param name="date">The date on which the security was purchased.</param>
 		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, decimal cost, DateTime date)
 		{
 			// Find the ID of the account.
