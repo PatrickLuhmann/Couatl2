@@ -50,17 +50,40 @@ namespace Couatl2
 				if (AppObj.OpenDbFile(fileDialog.FileName))
 				{
 					UpdateSummaryTab();
+					UpdateAccountTab(false);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Update and switch to the Summary tab.
+		/// Update and possibly switch to the Summary tab.
 		/// </summary>
-		private void UpdateSummaryTab()
+		private void UpdateSummaryTab(bool setSelected = true)
 		{
+			// Update the account list.
 			dataGridViewAccountList.DataSource = AppObj.GetAccountListTable();
-			MainTabControl.SelectedTab = SummaryTab;
+
+			// Update the performance chart
+
+			// Update the account value list
+
+			if (setSelected)
+				MainTabControl.SelectedTab = SummaryTab;
+		}
+
+		private void UpdateAccountTab(bool setSelected = true)
+		{
+			// Update the account combobox
+			comboBox1.Items.Clear();
+			List<string> acctList = AppObj.GetAccountNameList();
+			comboBox1.Items.AddRange(acctList.ToArray());
+			// TODO: Set an index? If an item had been selected, even from a different
+			// file, it will still show up here even though that item is not in the new list.
+			
+			// Update the positions view
+
+			if (setSelected)
+				MainTabControl.SelectedTab = AccountTab;
 		}
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -165,6 +188,14 @@ namespace Couatl2
 					System.Diagnostics.Debug.WriteLine("Create Account Dialog :: Create");
 					System.Diagnostics.Debug.WriteLine("Account Name: " + acct);
 					System.Diagnostics.Debug.WriteLine("Institution Name: " + inst);
+
+					AppObj.CreateAccount(acct, inst);
+
+					//pjl test code
+					UpdateAccountTab(false);
+					UpdateSummaryTab(false);
+
+					//MainTabControl.Refresh();
 				}
 
 			} while (false);

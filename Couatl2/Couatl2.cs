@@ -245,6 +245,28 @@ namespace Couatl2
 			return true;
 		}
 
+		/// <summary>
+		/// Return a list populated with the account names
+		/// </summary>
+		/// <returns>A List (of type string) with the names of the accounts in it.</returns>
+		public List<string> GetAccountNameList()
+		{
+			// Go through the rows of the Accounts table and extract the account names.
+			List<string> acctNameList = new List<string>();
+			DataTable acctTable = CurrDataSet.Tables["Accounts"];
+
+			foreach (DataRow dr in acctTable.Rows)
+			{
+				acctNameList.Add(dr["Name"].ToString());
+			}
+
+			return acctNameList;
+		}
+
+		/// <summary>
+		/// Return a table with account name, institution, and value
+		/// </summary>
+		/// <returns>Returns table with account name, institution, and value.</returns>
 		public DataTable GetAccountListTable()
 		{
 			// Start with a copy of the Accounts table.
@@ -252,27 +274,16 @@ namespace Couatl2
 
 			// Add a column for Value.
 			DataColumn value = acctList.Columns.Add("Value");
+			// TODO: This is test code to put an arbitrary value into the cell.
+			// Replace it with the real code.
 			for (int x = 0; x < acctList.Rows.Count; x++)
 			{
 				acctList.Rows[x]["Value"] = x * 2;
 			}
 
-			DataRow[] foundRows = acctList.Select("Institution = 'Scottrade'");
-			foreach (DataRow r in foundRows)
-			{
-				DataRow newRow = acctList.NewRow();
-				// Need to restore ID after we copy the item array; otherwise, we will
-				// get a duplicate row exception when we try to add the row.
-				UInt32 key = Convert.ToUInt32(newRow["ID"]);
-				newRow.ItemArray = r.ItemArray;
-				newRow["ID"] = key;
-				acctList.Rows.Add(newRow);
-			}
-
 			// Remove the ID column because that has no meaning to the user.
 			acctList.PrimaryKey = null;
 			acctList.Columns.Remove("ID");
-
 
 			return acctList;
 		}
@@ -310,6 +321,16 @@ namespace Couatl2
 			newXact["Date"] = date;
 			newXact["Account"] = acctID;
 			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+		}
+
+		public void CreateAccount(string accountName, string institutionName)
+		{
+			DataRow newAcct = CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = accountName;
+			newAcct["Institution"] = institutionName;
+			CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+
+			SaveDbFile();
 		}
 	}
 }
