@@ -17,17 +17,6 @@ namespace Couatl2
 			InitializeComponent();
 		}
 
-		private void label1_Click(object sender, EventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine("PTD :: Save button");
-
-		}
-
-		private void button2_Click(object sender, EventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine("PTD :: Cancel button");
-		}
-
 		public void AddAccountName(string name)
 		{
 			comboBox1.Items.Add(name);
@@ -40,22 +29,37 @@ namespace Couatl2
 
 		public string GetSymbol()
 		{
-			return textBox1.Text;
+			return SymbolTextBox.Text;
+		}
+
+		public string GetSymbolName()
+		{
+			return SymbolNameTextBox.Text;
 		}
 
 		public string GetQuantity()
 		{
-			return textBox2.Text;
+			return QuantityTextBox.Text;
 		}
 
 		public string GetCost()
 		{
-			return textBox3.Text;
+			return CostTextBox.Text;
+		}
+
+		public string GetCommission()
+		{
+			return CommissionTextBox.Text;
 		}
 
 		public DateTime GetDate()
 		{
-			return dateTimePicker1.Value;
+			return DatePicker.Value;
+		}
+
+		private void SymbolTextBox_Leave(object sender, EventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("PTD :: Leave symbol text box event.");
 		}
 	}
 }

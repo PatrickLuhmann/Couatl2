@@ -30,16 +30,20 @@
 		{
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.SymbolTextBox = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.QuantityTextBox = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.CostTextBox = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+			this.DatePicker = new System.Windows.Forms.DateTimePicker();
 			this.label5 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.SaveButton = new System.Windows.Forms.Button();
+			this.CancelButton = new System.Windows.Forms.Button();
+			this.label6 = new System.Windows.Forms.Label();
+			this.CommissionTextBox = new System.Windows.Forms.TextBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.SymbolNameTextBox = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -50,22 +54,22 @@
 			this.label1.Size = new System.Drawing.Size(47, 13);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Account";
-			this.label1.Click += new System.EventHandler(this.label1_Click);
 			// 
 			// comboBox1
 			// 
 			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(67, 13);
+			this.comboBox1.Location = new System.Drawing.Point(87, 13);
 			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(121, 21);
+			this.comboBox1.Size = new System.Drawing.Size(200, 21);
 			this.comboBox1.TabIndex = 1;
 			// 
-			// textBox1
+			// SymbolTextBox
 			// 
-			this.textBox1.Location = new System.Drawing.Point(67, 41);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(100, 20);
-			this.textBox1.TabIndex = 2;
+			this.SymbolTextBox.Location = new System.Drawing.Point(87, 41);
+			this.SymbolTextBox.Name = "SymbolTextBox";
+			this.SymbolTextBox.Size = new System.Drawing.Size(50, 20);
+			this.SymbolTextBox.TabIndex = 2;
+			this.SymbolTextBox.Leave += new System.EventHandler(this.SymbolTextBox_Leave);
 			// 
 			// label2
 			// 
@@ -76,12 +80,12 @@
 			this.label2.TabIndex = 3;
 			this.label2.Text = "Symbol";
 			// 
-			// textBox2
+			// QuantityTextBox
 			// 
-			this.textBox2.Location = new System.Drawing.Point(67, 68);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(100, 20);
-			this.textBox2.TabIndex = 4;
+			this.QuantityTextBox.Location = new System.Drawing.Point(87, 68);
+			this.QuantityTextBox.Name = "QuantityTextBox";
+			this.QuantityTextBox.Size = new System.Drawing.Size(100, 20);
+			this.QuantityTextBox.TabIndex = 4;
 			// 
 			// label3
 			// 
@@ -92,74 +96,109 @@
 			this.label3.TabIndex = 5;
 			this.label3.Text = "Quantity";
 			// 
-			// textBox3
+			// CostTextBox
 			// 
-			this.textBox3.Location = new System.Drawing.Point(67, 95);
-			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(100, 20);
-			this.textBox3.TabIndex = 6;
+			this.CostTextBox.Location = new System.Drawing.Point(87, 95);
+			this.CostTextBox.Name = "CostTextBox";
+			this.CostTextBox.Size = new System.Drawing.Size(100, 20);
+			this.CostTextBox.TabIndex = 6;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(15, 98);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(28, 13);
+			this.label4.Size = new System.Drawing.Size(55, 13);
 			this.label4.TabIndex = 7;
-			this.label4.Text = "Cost";
+			this.label4.Text = "Total Cost";
 			// 
-			// dateTimePicker1
+			// DatePicker
 			// 
-			this.dateTimePicker1.Location = new System.Drawing.Point(67, 122);
-			this.dateTimePicker1.Name = "dateTimePicker1";
-			this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-			this.dateTimePicker1.TabIndex = 8;
+			this.DatePicker.Location = new System.Drawing.Point(87, 147);
+			this.DatePicker.Name = "DatePicker";
+			this.DatePicker.Size = new System.Drawing.Size(200, 20);
+			this.DatePicker.TabIndex = 8;
 			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(15, 128);
+			this.label5.Location = new System.Drawing.Point(15, 153);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(30, 13);
 			this.label5.TabIndex = 9;
 			this.label5.Text = "Date";
 			// 
-			// button1
+			// SaveButton
 			// 
-			this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.button1.Location = new System.Drawing.Point(50, 148);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 10;
-			this.button1.Text = "Save";
-			this.button1.UseVisualStyleBackColor = true;
+			this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.SaveButton.Location = new System.Drawing.Point(50, 194);
+			this.SaveButton.Name = "SaveButton";
+			this.SaveButton.Size = new System.Drawing.Size(75, 23);
+			this.SaveButton.TabIndex = 10;
+			this.SaveButton.Text = "Save";
+			this.SaveButton.UseVisualStyleBackColor = true;
 			// 
-			// button2
+			// CancelButton
 			// 
-			this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button2.Location = new System.Drawing.Point(158, 148);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 11;
-			this.button2.Text = "Cancel";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.CancelButton.Location = new System.Drawing.Point(158, 194);
+			this.CancelButton.Name = "CancelButton";
+			this.CancelButton.Size = new System.Drawing.Size(75, 23);
+			this.CancelButton.TabIndex = 11;
+			this.CancelButton.Text = "Cancel";
+			this.CancelButton.UseVisualStyleBackColor = true;
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(15, 124);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(62, 13);
+			this.label6.TabIndex = 12;
+			this.label6.Text = "Commission";
+			// 
+			// CommissionTextBox
+			// 
+			this.CommissionTextBox.Location = new System.Drawing.Point(87, 121);
+			this.CommissionTextBox.Name = "CommissionTextBox";
+			this.CommissionTextBox.Size = new System.Drawing.Size(100, 20);
+			this.CommissionTextBox.TabIndex = 13;
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(143, 44);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(35, 13);
+			this.label7.TabIndex = 14;
+			this.label7.Text = "Name";
+			// 
+			// SymbolNameTextBox
+			// 
+			this.SymbolNameTextBox.Location = new System.Drawing.Point(184, 41);
+			this.SymbolNameTextBox.Name = "SymbolNameTextBox";
+			this.SymbolNameTextBox.Size = new System.Drawing.Size(103, 20);
+			this.SymbolNameTextBox.TabIndex = 15;
 			// 
 			// PurchaseTransactionDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 188);
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
+			this.ClientSize = new System.Drawing.Size(319, 241);
+			this.Controls.Add(this.SymbolNameTextBox);
+			this.Controls.Add(this.label7);
+			this.Controls.Add(this.CommissionTextBox);
+			this.Controls.Add(this.label6);
+			this.Controls.Add(this.CancelButton);
+			this.Controls.Add(this.SaveButton);
 			this.Controls.Add(this.label5);
-			this.Controls.Add(this.dateTimePicker1);
+			this.Controls.Add(this.DatePicker);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.textBox3);
+			this.Controls.Add(this.CostTextBox);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.textBox2);
+			this.Controls.Add(this.QuantityTextBox);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.SymbolTextBox);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label1);
 			this.Name = "PurchaseTransactionDialog";
@@ -173,15 +212,19 @@
 
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox comboBox1;
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox SymbolTextBox;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox QuantityTextBox;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.TextBox CostTextBox;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.DateTimePicker dateTimePicker1;
+		private System.Windows.Forms.DateTimePicker DatePicker;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button SaveButton;
+		private System.Windows.Forms.Button CancelButton;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.TextBox CommissionTextBox;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox SymbolNameTextBox;
 	}
 }

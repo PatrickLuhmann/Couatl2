@@ -33,9 +33,10 @@ namespace UnitTestProject1
 			UInt32 expSec = 1; // only symbol so it should always be 1
 			decimal expQty = 123.456M;
 			decimal expVal = 987.654M;
+			decimal expComm = 7.89M;
 			DateTime expDate = new DateTime(2016, 9, 4);
 			UInt32 expAcct = 1; // only account so it should always be 1
-			testApp.AddPurchaseTransaction("Account1", "XYZ", expQty, expVal, expDate);
+			testApp.AddPurchaseTransaction("Account1", "XYZ", expQty, expVal, expComm, expDate);
 
 			// Verify that the transaction table has only one row.
 			DataTable testXact = testApp.CurrDataSet.Tables["Transactions"];
@@ -48,6 +49,7 @@ namespace UnitTestProject1
 			Assert.AreEqual(expSec, actXact["Security"]);
 			Assert.AreEqual(expQty, actXact["Quantity"]);
 			Assert.AreEqual(expVal, actXact["Value"]);
+			Assert.AreEqual(expComm, actXact["Fee"]);
 			Assert.AreEqual(expDate, actXact["Date"]);
 			Assert.AreEqual(expAcct, actXact["Account"]);
 		}

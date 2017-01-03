@@ -110,6 +110,9 @@ namespace Couatl2
 			// Bring up a PurchaseTransactionDialog.
 			PurchaseTransactionDialog dlg = new PurchaseTransactionDialog();
 			// TODO: Fill the account combo box with the account names.
+			List<string> accts = AppObj.GetAccountNameList();
+			foreach (string name in accts)
+				dlg.AddAccountName(name);
 			dlg.AddAccountName("Account 1");
 			dlg.AddAccountName("Account 2");
 
@@ -128,7 +131,7 @@ namespace Couatl2
 					System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
 
 					decimal quantity;
-					decimal cost;
+					decimal cost, commission;
 
 					// Validate the types of the values that the user provided. 
 					try
@@ -151,15 +154,40 @@ namespace Couatl2
 
 						continue;
 					}
+					try
+					{
+						commission = Convert.ToDecimal(dlg.GetCommission());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Commission must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
 
 					DateTime date = dlg.GetDate();
 
 					string account = dlg.GetAccountName();
 
 					string symbol = dlg.GetSymbol();
+					// TODO: Symbol needs to already exist in the Symbols table. If it doesn't, need to ask
+					// the user for the info. That means popping up another dialog. While this is doable,
+					// it seems like a hassle for the user. Would it be possible to save this for later?
+					// Add a Name field to the purchase dialog so that the user can do it at the same time?
+					// The error message would say "unknown symbol, please add name" and that wouldn't be too
+					// bad would it?
+					if (!AppObj.FindSymbol(symbol))
+					{
+						string symName = dlg.GetSymbolName();
+						if (!AppObj.AddNewSecurity(symbol, symName))
+						{
+							MessageBox.Show("ERROR adding new symbol. Try again.");
+							continue;
+						}
+					}
 
 					// Create a new entry in the Transactions table.
-					if (AppObj.ProcessPurchaseTransaction(account, symbol, quantity, cost, date))
+					if (AppObj.ProcessPurchaseTransaction(account, symbol, quantity, cost, commission, date))
 						break;
 
 					MessageBox.Show("ERROR: Could not process transaction. Please check for errors in the input data.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

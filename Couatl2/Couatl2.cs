@@ -16,7 +16,7 @@ namespace Couatl2
 	{
 		private string CurrDbFilename;
 		internal DataSet CurrDataSet;
-		private static UInt32 CurrSchemaVersion = 1;
+		private static UInt32 CurrSchemaVersion = 2;
 
 		public Boolean IsDbOpen
 		{
@@ -121,6 +121,7 @@ namespace Couatl2
 			accounts.Columns["ID"].AutoIncrementStep = 1;
 			accounts.Columns.Add("Institution", typeof(String));
 			accounts.Columns.Add("Name", typeof(String));
+			accounts.Columns.Add("Closed", typeof(Boolean));
 
 			// TABLE: Transactions
 			DataTable transactions = newDb.Tables.Add("Transactions");
@@ -133,6 +134,7 @@ namespace Couatl2
 			transactions.Columns.Add("Security", typeof(UInt32));
 			transactions.Columns.Add("Quantity", typeof(Decimal));
 			transactions.Columns.Add("Value", typeof(Decimal));
+			transactions.Columns.Add("Fee", typeof(Decimal));
 			transactions.Columns.Add("Date", typeof(DateTime));
 			transactions.Columns.Add("Account", typeof(UInt32));
 
@@ -181,7 +183,7 @@ namespace Couatl2
 
 			row = configParameters.NewRow();
 			row["Name"] = "SchemaVersion";
-			row["Value"] = "1";
+			row["Value"] = "2";
 			configParameters.Rows.Add(row);
 
 			newDb.WriteXml(filename, XmlWriteMode.WriteSchema);
@@ -212,7 +214,7 @@ namespace Couatl2
 		/// </summary>
 		/// <param name="symbol">The Symbol to look for.</param>
 		/// <returns></returns>
-		internal bool FindSymbol(string symbol)
+		public bool FindSymbol(string symbol)
 		{
 			DataRow[] foundRows = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
 			if (foundRows.Length == 1)
@@ -221,7 +223,19 @@ namespace Couatl2
 				return false;
 		}
 
-		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, decimal cost, DateTime date)
+		public bool AddNewSecurity(string sym, string name)
+		{
+			// TODO: The symbol must be letters only.
+
+			DataRow newSec = CurrDataSet.Tables["Securities"].NewRow();
+			newSec["Symbol"] = sym;
+			newSec["Name"] = name;
+			CurrDataSet.Tables["Securities"].Rows.Add(newSec);
+			return true;
+		}
+
+		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, 
+			decimal cost, decimal commission, DateTime date)
 		{
 			// Verify the account name.
 			if (!FindAccount(account))
@@ -234,7 +248,7 @@ namespace Couatl2
 
 			try
 			{
-				AddPurchaseTransaction(account, symbol, quantity, cost, date);
+				AddPurchaseTransaction(account, symbol, quantity, cost, commission, date);
 			}
 			catch
 			{
@@ -302,7 +316,8 @@ namespace Couatl2
 		/// <param name="quantity">The number of shares of the security.</param>
 		/// <param name="cost">The total cost of the security.</param>
 		/// <param name="date">The date on which the security was purchased.</param>
-		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, decimal cost, DateTime date)
+		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, 
+			decimal cost, decimal commission, DateTime date)
 		{
 			// Find the ID of the account.
 			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + accountName + "'");
@@ -318,6 +333,7 @@ namespace Couatl2
 			newXact["Security"] = secID;
 			newXact["Quantity"] = quantity;
 			newXact["Value"] = cost;
+			newXact["Fee"] = commission;
 			newXact["Date"] = date;
 			newXact["Account"] = acctID;
 			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
