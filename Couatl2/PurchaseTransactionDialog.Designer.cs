@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.SymbolTextBox = new System.Windows.Forms.TextBox();
@@ -44,6 +45,8 @@
 			this.CommissionTextBox = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.SymbolNameTextBox = new System.Windows.Forms.TextBox();
+			this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -70,6 +73,7 @@
 			this.SymbolTextBox.Size = new System.Drawing.Size(50, 20);
 			this.SymbolTextBox.TabIndex = 2;
 			this.SymbolTextBox.Leave += new System.EventHandler(this.SymbolTextBox_Leave);
+			this.SymbolTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.SymbolTextBox_Validating);
 			// 
 			// label2
 			// 
@@ -180,6 +184,11 @@
 			this.SymbolNameTextBox.Size = new System.Drawing.Size(103, 20);
 			this.SymbolNameTextBox.TabIndex = 15;
 			// 
+			// errorProvider1
+			// 
+			this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink;
+			this.errorProvider1.ContainerControl = this;
+			// 
 			// PurchaseTransactionDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,6 +212,7 @@
 			this.Controls.Add(this.label1);
 			this.Name = "PurchaseTransactionDialog";
 			this.Text = "PurchaseTransactionDialog";
+			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -226,5 +236,6 @@
 		private System.Windows.Forms.TextBox CommissionTextBox;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox SymbolNameTextBox;
+		private System.Windows.Forms.ErrorProvider errorProvider1;
 	}
 }

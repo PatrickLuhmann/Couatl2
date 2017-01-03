@@ -225,13 +225,16 @@ namespace Couatl2
 
 		public bool AddNewSecurity(string sym, string name)
 		{
-			// TODO: The symbol must be letters only.
-
-			DataRow newSec = CurrDataSet.Tables["Securities"].NewRow();
-			newSec["Symbol"] = sym;
-			newSec["Name"] = name;
-			CurrDataSet.Tables["Securities"].Rows.Add(newSec);
-			return true;
+			if (System.Text.RegularExpressions.Regex.IsMatch(sym, @"^[A-Z]{1,5}$"))
+			{
+				DataRow newSec = CurrDataSet.Tables["Securities"].NewRow();
+				newSec["Symbol"] = sym;
+				newSec["Name"] = name;
+				CurrDataSet.Tables["Securities"].Rows.Add(newSec);
+				return true;
+			}
+			System.Diagnostics.Debug.WriteLine("Symbol is not valid.");
+			return false;
 		}
 
 		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, 

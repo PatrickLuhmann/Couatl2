@@ -74,9 +74,9 @@ namespace Couatl2
 		private void UpdateAccountTab(bool setSelected = true)
 		{
 			// Update the account combobox
-			comboBox1.Items.Clear();
+			AccountComboBox.Items.Clear();
 			List<string> acctList = AppObj.GetAccountNameList();
-			comboBox1.Items.AddRange(acctList.ToArray());
+			AccountComboBox.Items.AddRange(acctList.ToArray());
 			// TODO: Set an index? If an item had been selected, even from a different
 			// file, it will still show up here even though that item is not in the new list.
 			
@@ -107,20 +107,17 @@ namespace Couatl2
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			// Bring up a PurchaseTransactionDialog.
+			// Create, populate, and show a PurchaseTransactionDialog.
 			PurchaseTransactionDialog dlg = new PurchaseTransactionDialog();
-			// TODO: Fill the account combo box with the account names.
 			List<string> accts = AppObj.GetAccountNameList();
 			foreach (string name in accts)
 				dlg.AddAccountName(name);
-			dlg.AddAccountName("Account 1");
-			dlg.AddAccountName("Account 2");
+			dlg.SetAccount(AccountComboBox.SelectedItem.ToString());
 
 			do
 			{
 				DialogResult result = dlg.ShowDialog();
 
-				// What happens when the dialog is closed?
 				if (result == DialogResult.OK)
 				{
 					System.Diagnostics.Debug.WriteLine("Purchase Transaction Dialog :: Save");
@@ -130,8 +127,7 @@ namespace Couatl2
 					System.Diagnostics.Debug.WriteLine("Cost: " + dlg.GetCost());
 					System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
 
-					decimal quantity;
-					decimal cost, commission;
+					decimal quantity, cost, commission;
 
 					// Validate the types of the values that the user provided. 
 					try
@@ -150,7 +146,7 @@ namespace Couatl2
 					}
 					catch
 					{
-						MessageBox.Show("ERROR: Cost must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show("ERROR: Total Cost must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 						continue;
 					}
@@ -169,7 +165,7 @@ namespace Couatl2
 
 					string account = dlg.GetAccountName();
 
-					string symbol = dlg.GetSymbol();
+					string symbol = dlg.GetSymbol().ToUpper();
 					// TODO: Symbol needs to already exist in the Symbols table. If it doesn't, need to ask
 					// the user for the info. That means popping up another dialog. While this is doable,
 					// it seems like a hassle for the user. Would it be possible to save this for later?
@@ -179,6 +175,11 @@ namespace Couatl2
 					if (!AppObj.FindSymbol(symbol))
 					{
 						string symName = dlg.GetSymbolName();
+						if (symName == "")
+						{
+							MessageBox.Show("ERROR: Symbol not recognized. Please specify the name of the security.");
+							continue;
+						}
 						if (!AppObj.AddNewSecurity(symbol, symName))
 						{
 							MessageBox.Show("ERROR adding new symbol. Try again.");
