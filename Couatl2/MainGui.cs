@@ -229,5 +229,14 @@ namespace Couatl2
 
 			} while (false);
 		}
+
+		private void AccountComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedIndexChanged event handler.");
+			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedIndex = " + AccountComboBox.SelectedIndex.ToString() + ".");
+			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedItem = " + AccountComboBox.SelectedItem + ".");
+
+			AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
+		}
 	}
 }

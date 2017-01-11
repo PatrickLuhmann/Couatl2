@@ -351,5 +351,83 @@ namespace Couatl2
 
 			SaveDbFile();
 		}
+
+		public DataTable GetAccountPositionTable(string acctName)
+		{
+			System.Diagnostics.Debug.WriteLine("GetAccountPositionTable: Enter.");
+			System.Diagnostics.Debug.WriteLine("GetAccountPositionTable:   acctName = " + acctName + ".");
+
+			// Start with a copy of the Accounts table.
+			DataTable tblPositions = new DataTable("Positions");
+
+			// Add a column for Security.
+			tblPositions.Columns.Add("Security", typeof(String));
+
+			// Add a column for Value.
+			tblPositions.Columns.Add("Quantity", typeof(Decimal));
+
+			// Add a column for Value.
+			tblPositions.Columns.Add("Value", typeof(Decimal));
+
+
+			// Get the transactions for the given account.
+			DataRow[] acct = CurrDataSet.Tables["Accounts"].Select("Name = '" + acctName + "'");
+			UInt32 acctID = Convert.ToUInt32(acct[0]["ID"]);
+			DataRow[] xacts = CurrDataSet.Tables["Transactions"].Select("Account = " + acctID.ToString());
+
+			// Go through the transactions. For each, get the security.
+			// Look to see if we have seen this security already. If so,
+			// use the existing count. If not, create a new entry for it.
+			// Adjust the count by the quantity of the current transaction
+			// (add for purchase and subtract for sell).
+			foreach (DataRow xact in xacts)
+			{
+				// xact has Security, which is the ID in the Securities table.
+				UInt32 secID = Convert.ToUInt32(xact["Security"]);
+				// Look up the ID and get the Symbol string.
+				DataRow[] secRow = CurrDataSet.Tables["Securities"].Select("ID = " + secID.ToString());
+				string secSym = secRow[0]["Symbol"].ToString();
+				// Look up the symbol in the positions table we are building.
+				DataRow[] symRow = tblPositions.Select("Security = '" + secSym + "'");
+				// It might be present already, or it might be the first time we have seen it.
+				DataRow tgtPos;
+				if (symRow.Length == 0)
+				{
+					// Not present so it is a new symbol.
+
+					// Add a new row to the positions table.
+					tgtPos = tblPositions.NewRow();
+					tgtPos["Security"] = secSym;
+					tgtPos["Quantity"] = 0;
+					tgtPos["Value"] = 0;
+					tblPositions.Rows.Add(tgtPos);
+				}
+				else
+				{
+					// Present already, so we have seen this symbol before.
+					tgtPos = symRow[0];
+				}
+
+				// Update the quantity
+				decimal qtyChange = Convert.ToDecimal(xact["Quantity"]);
+				decimal qtyCurr = Convert.ToDecimal(tgtPos["Quantity"]);
+				qtyCurr += qtyChange;
+				tgtPos["Quantity"] = qtyCurr;
+			}
+
+			// Go through the positions and remove any security that has
+			// a quantity of 0, which represents something that has been
+			// completely sold off.
+
+			// Go through the positions and look up the most recent price for
+			// each security. Multiply this by the quantity of the security to
+			// get the value.
+			DataRow dbg_newPos = tblPositions.NewRow();
+			dbg_newPos["Security"] = "ABC";
+			dbg_newPos["Quantity"] = 123;
+			dbg_newPos["Value"] = 9876.54;
+			tblPositions.Rows.Add(dbg_newPos);
+			return tblPositions;
+		}
 	}
 }
