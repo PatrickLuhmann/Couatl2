@@ -148,6 +148,7 @@ namespace Couatl2
 			prices.Columns.Add("Security", typeof(UInt32));
 			prices.Columns.Add("Price", typeof(Decimal));
 			prices.Columns.Add("Date", typeof(DateTime));
+			prices.Columns.Add("Closing", typeof(Boolean));
 
 			// TABLE: Securities
 			DataTable securities = newDb.Tables.Add("Securities");
@@ -183,7 +184,7 @@ namespace Couatl2
 
 			row = configParameters.NewRow();
 			row["Name"] = "SchemaVersion";
-			row["Value"] = "2";
+			row["Value"] = "3";
 			configParameters.Rows.Add(row);
 
 			newDb.WriteXml(filename, XmlWriteMode.WriteSchema);
@@ -237,6 +238,85 @@ namespace Couatl2
 			return false;
 		}
 
+		/// <summary>
+		/// Get the ID of the row that corresponds to the security described by 'sym'
+		/// </summary>
+		/// <param name="sym">The symbol of the security.</param>
+		/// <returns>The ID of the row. 0 means that the symbol is not present in the table.</returns>
+		internal UInt32 GetSecurityIdFromSymbol(string sym)
+		{
+			// Normalize, just in case.
+			sym = sym.ToUpper();
+
+			DataRow[] foundRows = CurrDataSet.Tables["Securities"].Select("Symbol = '" + sym + "'");
+			if (foundRows.Length == 1)
+				return Convert.ToUInt32(foundRows[0]["ID"]);
+			else
+				return 0;
+		}
+
+		/// <summary>
+		/// Get the price-row for the given security on the given date
+		/// </summary>
+		/// <param name="secID">The ID of the security (from the Securities table).</param>
+		/// <param name="date">The date of the price.</param>
+		/// <returns>The row that holds the price; null if the price is not present.</returns>
+		private DataRow GetPrice(UInt32 secID, DateTime date)
+		{
+			date = date.Date;
+
+			// Get the row for this particular price.
+			string query = "Security = " + secID.ToString() + " AND Date = #" + date.ToString() + "#";
+			DataRow[] prices = CurrDataSet.Tables["Prices"].Select(query);
+
+			// Assume that either 0 or 1 row is returned.
+			if (prices.Length == 0)
+				return null;
+			else
+				return prices[0];
+		}
+
+		internal void AddPrice(string symbol, decimal price, DateTime date, bool closing)
+		{
+			UInt32 secID = GetSecurityIdFromSymbol(symbol);
+			// TODO: Throw an exception instead?
+			if (secID == 0)
+				return;
+
+			// If there is already a price for this date, we might replace it or
+			// we might ignore it. If the new price is a closing price, then we will
+			// replace the existing price. If the new price is not a closing price,
+			// then we will only replace the existing price if it is also not a closing
+			// price. The theory behind this is that a newer price will be more accurate
+			// than an older price, and that the closing price is always better than an
+			// intra-day price. Replacing a closing price with a closing price should be
+			// a no-op, because they should be the same, but it is simpler to just replace.
+
+			// Normalize the date; we don't care about the time.
+			date = date.Date;
+			DataRow oldPrice = GetPrice(secID, date);
+			if (oldPrice == null)
+			{
+				// No price exists for this date, so add a new row to the table.
+				DataRow newPrice = CurrDataSet.Tables["Prices"].NewRow();
+				newPrice["Security"] = secID;
+				newPrice["Price"] = price;
+				newPrice["Date"] = date;
+				newPrice["Closing"] = closing;
+				CurrDataSet.Tables["Prices"].Rows.Add(newPrice);
+			}
+			else if (closing || !Convert.ToBoolean(oldPrice["Closing"]))
+			{
+				// Replace the old price with the new price
+				oldPrice["Security"] = secID;
+				oldPrice["Price"] = price;
+				oldPrice["Date"] = date;
+				oldPrice["Closing"] = closing;
+			}
+
+			CurrDataSet.Tables["Prices"].AcceptChanges();
+		}
+
 		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, 
 			decimal cost, decimal commission, DateTime date)
 		{
@@ -252,6 +332,7 @@ namespace Couatl2
 			try
 			{
 				AddPurchaseTransaction(account, symbol, quantity, cost, commission, date);
+				AddPrice(symbol, cost / quantity, date, false);
 			}
 			catch
 			{
@@ -389,7 +470,7 @@ namespace Couatl2
 				string secSym = secRow[0]["Symbol"].ToString();
 				// Look up the symbol in the positions table we are building.
 				DataRow[] symRow = tblPositions.Select("Security = '" + secSym + "'");
-				// It might be present already, or it might be the first time we have seen it.
+				// It might be present already, or this might be the first time we have seen it.
 				DataRow tgtPos;
 				if (symRow.Length == 0)
 				{
@@ -422,12 +503,47 @@ namespace Couatl2
 			// Go through the positions and look up the most recent price for
 			// each security. Multiply this by the quantity of the security to
 			// get the value.
-			DataRow dbg_newPos = tblPositions.NewRow();
-			dbg_newPos["Security"] = "ABC";
-			dbg_newPos["Quantity"] = 123;
-			dbg_newPos["Value"] = 9876.54;
-			tblPositions.Rows.Add(dbg_newPos);
+			foreach(DataRow posRow in tblPositions.Rows)
+			{
+				decimal qty = Convert.ToDecimal(posRow["Quantity"]);
+
+				decimal price = GetSecurityPrice(posRow["Security"].ToString());
+
+				posRow["Value"] = qty * price;
+			}
+
 			return tblPositions;
+		}
+
+		/// <summary>
+		/// Return the most recent price for the given security
+		/// 
+		/// ASSUME: symbol is in the DB exactly once.
+		/// </summary>
+		/// <param name="symbol">The symbol of the security.</param>
+		/// <returns>The price of the security.</returns>
+		internal decimal GetSecurityPrice(string symbol)
+		{
+			// Get the ID of the security.
+			DataRow[] secRow = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
+			UInt32 secID = Convert.ToUInt32(secRow[0]["ID"]);
+
+			// Get the prices for this security.
+			DataRow[] priceRows = CurrDataSet.Tables["Prices"].Select("Security = " + secID.ToString());
+
+			// Find the most recent price.
+			Decimal price = 0;
+			DateTime mostRecent = DateTime.MinValue;
+			foreach (DataRow dr in priceRows)
+			{
+				DateTime curr = Convert.ToDateTime(dr["Date"]);
+				if (curr > mostRecent)
+				{
+					mostRecent = curr;
+					price = Convert.ToDecimal(dr["Price"]);
+				}
+			}
+			return price;
 		}
 	}
 }
