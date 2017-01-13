@@ -29,7 +29,7 @@ namespace UnitTestProject1
 			newSec["Symbol"] = "XYZ";
 			testApp.CurrDataSet.Tables["Securities"].Rows.Add(newSec);
 
-			UInt32 expType = 1;
+			UInt32 expType = 1; // Buy
 			UInt32 expSec = 1; // only symbol so it should always be 1
 			decimal expQty = 123.456M;
 			decimal expVal = 987.654M;
@@ -55,7 +55,7 @@ namespace UnitTestProject1
 		}
 
 		[TestMethod]
-		public void GetSecurityPrice_OneRow()
+		public void GetPrice_OneRow()
 		{
 			Couatl2App testApp = new Couatl2App();
 			testApp.CreateNewDbFile("test-getsecprice1.xml");
@@ -76,14 +76,14 @@ namespace UnitTestProject1
 			newPrice["Date"] = new DateTime(2017, 1, 11);
 			testApp.CurrDataSet.Tables["Prices"].Rows.Add(newPrice);
 
-			decimal actPrice = testApp.GetSecurityPrice(testSecSym);
+			decimal actPrice = testApp.GetPrice(testSecSym);
 
 			// Verify
 			Assert.AreEqual(expPrice, actPrice);
 		}
 
 		[TestMethod]
-		public void GetSecurityPrice_OneSymFiveRows()
+		public void GetPrice_OneSymFiveRows()
 		{
 			Couatl2App testApp = new Couatl2App();
 			testApp.CreateNewDbFile("test-getsecprice1x5.xml");
@@ -133,14 +133,14 @@ namespace UnitTestProject1
 			testApp.CurrDataSet.Tables["Prices"].Rows.Add(newPrice);
 
 			// Execute code under test.
-			decimal actPrice = testApp.GetSecurityPrice(testSecSym);
+			decimal actPrice = testApp.GetPrice(testSecSym);
 
 			// Verify
 			Assert.AreEqual(expPrice, actPrice);
 		}
 
 		[TestMethod]
-		public void GetSecurityPrice_OneSymFiveRows_OOO()
+		public void GetPrice_OneSymFiveRows_OOO()
 		{
 			Couatl2App testApp = new Couatl2App();
 			testApp.CreateNewDbFile("test-getsecprice1x5.xml");
@@ -188,14 +188,14 @@ namespace UnitTestProject1
 			testApp.CurrDataSet.Tables["Prices"].Rows.Add(newPrice);
 
 			// Execute code under test.
-			decimal actPrice = testApp.GetSecurityPrice(testSecSym);
+			decimal actPrice = testApp.GetPrice(testSecSym);
 
 			// Verify
 			Assert.AreEqual(expPrice, actPrice);
 		}
 
 		[TestMethod]
-		public void GetSecurityPrice_ManySymManyRows()
+		public void GetPrice_ManySymManyRows()
 		{
 			Couatl2App testApp = new Couatl2App();
 			testApp.CreateNewDbFile("test-getsecprice1.xml");
@@ -293,7 +293,7 @@ namespace UnitTestProject1
 			testApp.CurrDataSet.Tables["Prices"].Rows.Add(newPrice);
 
 			// Execute the code under test.
-			decimal actPrice = testApp.GetSecurityPrice("FUD");
+			decimal actPrice = testApp.GetPrice("FUD");
 
 			// Verify
 			Assert.AreEqual(expPrice, actPrice);

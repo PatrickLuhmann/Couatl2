@@ -167,6 +167,7 @@
 			this.MainTabControl.Size = new System.Drawing.Size(1003, 769);
 			this.MainTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
 			this.MainTabControl.TabIndex = 1;
+			this.MainTabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.MainTabControl_Selecting);
 			// 
 			// SummaryTab
 			// 

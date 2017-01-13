@@ -16,7 +16,7 @@ namespace Couatl2
 	{
 		private string CurrDbFilename;
 		internal DataSet CurrDataSet;
-		private static UInt32 CurrSchemaVersion = 2;
+		private static UInt32 CurrSchemaVersion = 3;
 
 		public Boolean IsDbOpen
 		{
@@ -184,7 +184,7 @@ namespace Couatl2
 
 			row = configParameters.NewRow();
 			row["Name"] = "SchemaVersion";
-			row["Value"] = "3";
+			row["Value"] = CurrSchemaVersion.ToString();
 			configParameters.Rows.Add(row);
 
 			newDb.WriteXml(filename, XmlWriteMode.WriteSchema);
@@ -256,26 +256,18 @@ namespace Couatl2
 		}
 
 		/// <summary>
-		/// Get the price-row for the given security on the given date
+		/// Put the price into the database
+		/// 
+		/// The specified price is put into the database. If there is a price for
+		/// the security on the given date, it will be replaced if any of the
+		/// following are true:
+		/// - the new price is a closing price.
+		/// - the existing price is an intra-day price.
 		/// </summary>
-		/// <param name="secID">The ID of the security (from the Securities table).</param>
-		/// <param name="date">The date of the price.</param>
-		/// <returns>The row that holds the price; null if the price is not present.</returns>
-		private DataRow GetPrice(UInt32 secID, DateTime date)
-		{
-			date = date.Date;
-
-			// Get the row for this particular price.
-			string query = "Security = " + secID.ToString() + " AND Date = #" + date.ToString() + "#";
-			DataRow[] prices = CurrDataSet.Tables["Prices"].Select(query);
-
-			// Assume that either 0 or 1 row is returned.
-			if (prices.Length == 0)
-				return null;
-			else
-				return prices[0];
-		}
-
+		/// <param name="symbol">The symbol of the security.</param>
+		/// <param name="price">The price of the security.</param>
+		/// <param name="date">The date for the price.</param>
+		/// <param name="closing">True if this is the closing price; false if it is an intra-day price.</param>
 		internal void AddPrice(string symbol, decimal price, DateTime date, bool closing)
 		{
 			UInt32 secID = GetSecurityIdFromSymbol(symbol);
@@ -332,7 +324,7 @@ namespace Couatl2
 			try
 			{
 				AddPurchaseTransaction(account, symbol, quantity, cost, commission, date);
-				AddPrice(symbol, cost / quantity, date, false);
+				AddPrice(symbol, (cost - commission) / quantity, date, false); // cost includes commission
 			}
 			catch
 			{
@@ -507,12 +499,33 @@ namespace Couatl2
 			{
 				decimal qty = Convert.ToDecimal(posRow["Quantity"]);
 
-				decimal price = GetSecurityPrice(posRow["Security"].ToString());
+				decimal price = GetPrice(posRow["Security"].ToString());
 
 				posRow["Value"] = qty * price;
 			}
 
 			return tblPositions;
+		}
+
+		/// <summary>
+		/// Get the price-row for the given security on the given date
+		/// </summary>
+		/// <param name="secID">The ID of the security (from the Securities table).</param>
+		/// <param name="date">The date of the price.</param>
+		/// <returns>The row that holds the price; null if the price is not present.</returns>
+		private DataRow GetPrice(UInt32 secID, DateTime date)
+		{
+			date = date.Date;
+
+			// Get the row for this particular price.
+			string query = "Security = " + secID.ToString() + " AND Date = #" + date.ToString() + "#";
+			DataRow[] prices = CurrDataSet.Tables["Prices"].Select(query);
+
+			// Assume that either 0 or 1 row is returned.
+			if (prices.Length == 0)
+				return null;
+			else
+				return prices[0];
 		}
 
 		/// <summary>
@@ -522,7 +535,7 @@ namespace Couatl2
 		/// </summary>
 		/// <param name="symbol">The symbol of the security.</param>
 		/// <returns>The price of the security.</returns>
-		internal decimal GetSecurityPrice(string symbol)
+		internal decimal GetPrice(string symbol)
 		{
 			// Get the ID of the security.
 			DataRow[] secRow = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");

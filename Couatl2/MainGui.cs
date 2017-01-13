@@ -187,9 +187,14 @@ namespace Couatl2
 						}
 					}
 
-					// Create a new entry in the Transactions table.
+					// Update the database with the details of this purchase.
 					if (AppObj.ProcessPurchaseTransaction(account, symbol, quantity, cost, commission, date))
+					{
+						// update Account tab
+						UpdateAccountPositionsView();
+
 						break;
+					}
 
 					MessageBox.Show("ERROR: Could not process transaction. Please check for errors in the input data.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
@@ -230,13 +235,35 @@ namespace Couatl2
 			} while (false);
 		}
 
+		private void UpdateAccountPositionsView()
+		{
+			AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
+		}
+
 		private void AccountComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedIndexChanged event handler.");
 			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedIndex = " + AccountComboBox.SelectedIndex.ToString() + ".");
 			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedItem = " + AccountComboBox.SelectedItem + ".");
 
-			AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
+			UpdateAccountPositionsView();
+		}
+
+		private void MainTabControl_Selecting(object sender, TabControlCancelEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("MainTabControl :: Selecting event handler.");
+			System.Diagnostics.Debug.WriteLine("MainTabControl :: Page = " + e.TabPage + ".");
+			System.Diagnostics.Debug.WriteLine("MainTabControl :: TabPageIndex = " + e.TabPageIndex + ".");
+			System.Diagnostics.Debug.WriteLine("MainTabControl :: Action = " + e.Action + ".");
+			System.Diagnostics.Debug.WriteLine("MainTabControl :: Cancel = " + e.Cancel + ".");
+			if (e.TabPageIndex == 1)
+			{
+				System.Diagnostics.Debug.WriteLine("MainTabControl :: Account combo index = " + AccountComboBox.SelectedIndex + ".");
+				System.Diagnostics.Debug.WriteLine("MainTabControl :: Account combo qty = " + AccountComboBox.Items.Count + ".");
+
+				if (AccountComboBox.SelectedIndex == -1 && AccountComboBox.Items.Count > 0)
+					AccountComboBox.SelectedIndex = 0;
+			}
 		}
 	}
 }
