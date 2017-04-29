@@ -50,12 +50,14 @@
 			this.dataGridViewAccountList = new System.Windows.Forms.DataGridView();
 			this.AccountTab = new System.Windows.Forms.TabPage();
 			this.AccountPositionsView = new System.Windows.Forms.DataGridView();
-			this.label1 = new System.Windows.Forms.Label();
+			this.labelPositions = new System.Windows.Forms.Label();
 			this.AccountComboBox = new System.Windows.Forms.ComboBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.SecurityTab = new System.Windows.Forms.TabPage();
 			this.label3 = new System.Windows.Forms.Label();
+			this.AccountTransactionsView = new System.Windows.Forms.DataGridView();
+			this.labelTransactions = new System.Windows.Forms.Label();
 			this.MainMenuStrip.SuspendLayout();
 			this.MainTabControl.SuspendLayout();
 			this.SummaryTab.SuspendLayout();
@@ -66,6 +68,7 @@
 			this.AccountTab.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.AccountPositionsView)).BeginInit();
 			this.SecurityTab.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AccountTransactionsView)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// MainMenuStrip
@@ -250,8 +253,10 @@
 			// 
 			// AccountTab
 			// 
+			this.AccountTab.Controls.Add(this.labelTransactions);
+			this.AccountTab.Controls.Add(this.AccountTransactionsView);
 			this.AccountTab.Controls.Add(this.AccountPositionsView);
-			this.AccountTab.Controls.Add(this.label1);
+			this.AccountTab.Controls.Add(this.labelPositions);
 			this.AccountTab.Controls.Add(this.AccountComboBox);
 			this.AccountTab.Controls.Add(this.button1);
 			this.AccountTab.Controls.Add(this.label2);
@@ -267,22 +272,24 @@
 			// 
 			this.AccountPositionsView.AllowUserToAddRows = false;
 			this.AccountPositionsView.AllowUserToDeleteRows = false;
+			this.AccountPositionsView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.AccountPositionsView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.AccountPositionsView.Location = new System.Drawing.Point(10, 91);
 			this.AccountPositionsView.Name = "AccountPositionsView";
 			this.AccountPositionsView.ReadOnly = true;
 			this.AccountPositionsView.RowHeadersVisible = false;
-			this.AccountPositionsView.Size = new System.Drawing.Size(977, 634);
+			this.AccountPositionsView.Size = new System.Drawing.Size(413, 634);
 			this.AccountPositionsView.TabIndex = 4;
 			// 
-			// label1
+			// labelPositions
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(6, 64);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(96, 23);
-			this.label1.TabIndex = 3;
-			this.label1.Text = "Positions";
+			this.labelPositions.AutoSize = true;
+			this.labelPositions.Location = new System.Drawing.Point(6, 64);
+			this.labelPositions.Name = "labelPositions";
+			this.labelPositions.Size = new System.Drawing.Size(96, 23);
+			this.labelPositions.TabIndex = 3;
+			this.labelPositions.Text = "Positions";
 			// 
 			// AccountComboBox
 			// 
@@ -331,6 +338,31 @@
 			this.label3.TabIndex = 0;
 			this.label3.Text = "label3";
 			// 
+			// AccountTransactionsView
+			// 
+			this.AccountTransactionsView.AllowUserToAddRows = false;
+			this.AccountTransactionsView.AllowUserToDeleteRows = false;
+			this.AccountTransactionsView.AllowUserToResizeRows = false;
+			this.AccountTransactionsView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.AccountTransactionsView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.AccountTransactionsView.Location = new System.Drawing.Point(430, 91);
+			this.AccountTransactionsView.Name = "AccountTransactionsView";
+			this.AccountTransactionsView.ReadOnly = true;
+			this.AccountTransactionsView.RowHeadersVisible = false;
+			this.AccountTransactionsView.Size = new System.Drawing.Size(557, 634);
+			this.AccountTransactionsView.TabIndex = 5;
+			// 
+			// labelTransactions
+			// 
+			this.labelTransactions.AutoSize = true;
+			this.labelTransactions.Location = new System.Drawing.Point(426, 64);
+			this.labelTransactions.Name = "labelTransactions";
+			this.labelTransactions.Size = new System.Drawing.Size(129, 23);
+			this.labelTransactions.TabIndex = 6;
+			this.labelTransactions.Text = "Transactions";
+			// 
 			// MainGui
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -356,6 +388,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.AccountPositionsView)).EndInit();
 			this.SecurityTab.ResumeLayout(false);
 			this.SecurityTab.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AccountTransactionsView)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -386,11 +419,13 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.DataGridView AccountPositionsView;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label labelPositions;
 		private System.Windows.Forms.ComboBox AccountComboBox;
 		private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem createAccountToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteAccountToolStripMenuItem;
+		private System.Windows.Forms.Label labelTransactions;
+		private System.Windows.Forms.DataGridView AccountTransactionsView;
 	}
 }
 

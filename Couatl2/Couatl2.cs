@@ -425,12 +425,41 @@ namespace Couatl2
 			SaveDbFile();
 		}
 
+		public DataTable GetAccountTransactionTable(string acctName)
+		{
+			// Start with a copy of the Transactions table.
+			DataTable xactList = CurrDataSet.Tables["Transactions"].Copy();
+
+#if false
+			// Start with a copy of the Accounts table.
+			DataTable acctList = CurrDataSet.Tables["Accounts"].Copy();
+
+			// Add a column for Value.
+			DataColumn value = acctList.Columns.Add("Value");
+			// TODO: This is test code to put an arbitrary value into the cell.
+			// Replace it with the real code.
+			for (int x = 0; x < acctList.Rows.Count; x++)
+			{
+				acctList.Rows[x]["Value"] = x * 2;
+			}
+#endif // false
+
+			// Remove the Account column.
+			xactList.Columns.Remove("Account");
+
+			// Remove the ID column because that has no meaning to the user.
+			xactList.PrimaryKey = null;
+			xactList.Columns.Remove("ID");
+
+			return xactList;
+		}
+
 		public DataTable GetAccountPositionTable(string acctName)
 		{
 			System.Diagnostics.Debug.WriteLine("GetAccountPositionTable: Enter.");
 			System.Diagnostics.Debug.WriteLine("GetAccountPositionTable:   acctName = " + acctName + ".");
 
-			// Start with a copy of the Accounts table.
+			// Start with a copy of the Positions table.
 			DataTable tblPositions = new DataTable("Positions");
 
 			// Add a column for Security.

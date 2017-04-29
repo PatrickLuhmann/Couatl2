@@ -235,6 +235,10 @@ namespace Couatl2
 			} while (false);
 		}
 
+		private void UpdateAccountTransactionsView()
+		{
+			AccountTransactionsView.DataSource = AppObj.GetAccountTransactionTable(AccountComboBox.SelectedItem.ToString());
+		}
 		private void UpdateAccountPositionsView()
 		{
 			AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
@@ -247,6 +251,7 @@ namespace Couatl2
 			System.Diagnostics.Debug.WriteLine("AccountComboBox :: SelectedItem = " + AccountComboBox.SelectedItem + ".");
 
 			UpdateAccountPositionsView();
+			UpdateAccountTransactionsView();
 		}
 
 		private void MainTabControl_Selecting(object sender, TabControlCancelEventArgs e)
