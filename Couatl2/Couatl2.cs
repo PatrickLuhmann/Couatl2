@@ -335,6 +335,26 @@ namespace Couatl2
 			return true;
 		}
 
+        public UInt32 GetAccountIdFromName(String name)
+        {
+            DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + name + "'");
+
+            // Account names are unique, so if one row is returned then we know that it is
+            // the one we want. Otherwise, we assume that the account does not exist. We
+            // do not explicitly handle the case where more than one row is returned.
+            UInt32 acctID = 0;
+            if (foundRows.Length == 1)
+                acctID = Convert.ToUInt32(foundRows[0]["ID"]);
+
+            return acctID;
+
+            //TODO: Throw an exception if the name is not in the table? The name should always
+            //be valid because it comes from the program, not the user. I think this is a case
+            //where an exception is preferred, since it reflects a real bug in the program, not
+            //just something that the user did that is a minor mistake (such as misspelling the
+            //name in an input text box).
+        }
+
 		/// <summary>
 		/// Return a list populated with the account names
 		/// </summary>
@@ -395,6 +415,8 @@ namespace Couatl2
 		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, 
 			decimal cost, decimal commission, DateTime date)
 		{
+            //TODO: Replace this with call to GetAccountIdFromName
+
 			// Find the ID of the account.
 			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + accountName + "'");
 			// TODO: This code assumes one row is always returned. What happens if this is not the case?
@@ -459,13 +481,13 @@ namespace Couatl2
 			System.Diagnostics.Debug.WriteLine("GetAccountPositionTable: Enter.");
 			System.Diagnostics.Debug.WriteLine("GetAccountPositionTable:   acctName = " + acctName + ".");
 
-			// Start with a copy of the Positions table.
+			// Start with a new, empty table.
 			DataTable tblPositions = new DataTable("Positions");
 
 			// Add a column for Security.
 			tblPositions.Columns.Add("Security", typeof(String));
 
-			// Add a column for Value.
+			// Add a column for Quantity.
 			tblPositions.Columns.Add("Quantity", typeof(Decimal));
 
 			// Add a column for Value.
