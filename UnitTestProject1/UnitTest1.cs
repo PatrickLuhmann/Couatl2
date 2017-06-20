@@ -8,77 +8,77 @@ namespace UnitTestProject1
 	[TestClass]
 	public class UnitTest1
 	{
-        /// <summary>
-        /// The account name is in the table and returns the correct ID.
-        /// </summary>
-        [TestMethod]
-        public void GetAccountIdFromName_Present()
-        {
-            Couatl2App testApp = new Couatl2App();
-            testApp.CreateNewDbFile("test-getacctid1.xml");
+		/// <summary>
+		/// The account name is in the table and returns the correct ID.
+		/// </summary>
+		[TestMethod]
+		public void GetAccountIdFromName_Present()
+		{
+			Couatl2App testApp = new Couatl2App();
+			testApp.CreateNewDbFile("test-getacctid1.xml");
 
-            // Create the test accounts.
-            DataRow newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
-            newAcct["Name"] = "Account1";
-            newAcct["Institution"] = "Institution1";
-            testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			// Create the test accounts.
+			DataRow newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "Account1";
+			newAcct["Institution"] = "Institution1";
+			testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
 
-            newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
-            newAcct["Name"] = "Account2";
-            newAcct["Institution"] = "Institution2";
-            testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
-            UInt32 expId = Convert.ToUInt32(newAcct["ID"]);
+			newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "Account2";
+			newAcct["Institution"] = "Institution2";
+			testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			UInt32 expId = Convert.ToUInt32(newAcct["ID"]);
 
-            newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
-            newAcct["Name"] = "Account3";
-            newAcct["Institution"] = "Institution3";
-            testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "Account3";
+			newAcct["Institution"] = "Institution3";
+			testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
 
-            // Invoke the method under test.
-            UInt32 actId = testApp.GetAccountIdFromName("Account2");
+			// Invoke the method under test.
+			UInt32 actId = testApp.GetAccountIdFromName("Account2");
 
-            // Verify.
-            Assert.AreEqual(expId, actId);
-        }
+			// Verify.
+			Assert.AreEqual(expId, actId);
+		}
 
-        /// <summary>
-        /// The account name is not in the table and returns 0.
-        /// </summary>
-        [TestMethod]
-        public void GetAccountIdFromName_NotPresent()
-        {
-            Couatl2App testApp = new Couatl2App();
-            testApp.CreateNewDbFile("test-getacctid2.xml");
+		/// <summary>
+		/// The account name is not in the table and returns 0.
+		/// </summary>
+		[TestMethod]
+		public void GetAccountIdFromName_NotPresent()
+		{
+			Couatl2App testApp = new Couatl2App();
+			testApp.CreateNewDbFile("test-getacctid2.xml");
 
-            // Create the test accounts.
-            DataRow newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
-            newAcct["Name"] = "Account1";
-            newAcct["Institution"] = "Institution1";
-            testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			// Create the test accounts.
+			DataRow newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "Account1";
+			newAcct["Institution"] = "Institution1";
+			testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
 
-            newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
-            newAcct["Name"] = "Account2";
-            newAcct["Institution"] = "Institution2";
-            testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "Account2";
+			newAcct["Institution"] = "Institution2";
+			testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
 
-            newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
-            newAcct["Name"] = "Account3";
-            newAcct["Institution"] = "Institution3";
-            testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			newAcct = testApp.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "Account3";
+			newAcct["Institution"] = "Institution3";
+			testApp.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
 
-            UInt32 expId = 0;
+			UInt32 expId = 0;
 
-            // Invoke the method under test.
-            UInt32 actId = testApp.GetAccountIdFromName("DoesNotExist");
+			// Invoke the method under test.
+			UInt32 actId = testApp.GetAccountIdFromName("DoesNotExist");
 
-            // Verify.
-            Assert.AreEqual(expId, actId);
-        }
+			// Verify.
+			Assert.AreEqual(expId, actId);
+		}
 
-        /// <summary>
-        /// A purchase is added to a database that has no transactions.
-        /// </summary>
-        [TestMethod]
+		/// <summary>
+		/// A purchase is added to a database that has no transactions.
+		/// </summary>
+		[TestMethod]
 		public void AddPurchase_FirstXact()
 		{
 			Couatl2App testApp = new Couatl2App();

@@ -335,25 +335,25 @@ namespace Couatl2
 			return true;
 		}
 
-        public UInt32 GetAccountIdFromName(String name)
-        {
-            DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + name + "'");
+		public UInt32 GetAccountIdFromName(String name)
+		{
+			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + name + "'");
 
-            // Account names are unique, so if one row is returned then we know that it is
-            // the one we want. Otherwise, we assume that the account does not exist. We
-            // do not explicitly handle the case where more than one row is returned.
-            UInt32 acctID = 0;
-            if (foundRows.Length == 1)
-                acctID = Convert.ToUInt32(foundRows[0]["ID"]);
+			// Account names are unique, so if one row is returned then we know that it is
+			// the one we want. Otherwise, we assume that the account does not exist. We
+			// do not explicitly handle the case where more than one row is returned.
+			UInt32 acctID = 0;
+			if (foundRows.Length == 1)
+				acctID = Convert.ToUInt32(foundRows[0]["ID"]);
 
-            return acctID;
+			return acctID;
 
-            //TODO: Throw an exception if the name is not in the table? The name should always
-            //be valid because it comes from the program, not the user. I think this is a case
-            //where an exception is preferred, since it reflects a real bug in the program, not
-            //just something that the user did that is a minor mistake (such as misspelling the
-            //name in an input text box).
-        }
+			//TODO: Throw an exception if the name is not in the table? The name should always
+			//be valid because it comes from the program, not the user. I think this is a case
+			//where an exception is preferred, since it reflects a real bug in the program, not
+			//just something that the user did that is a minor mistake (such as misspelling the
+			//name in an input text box).
+		}
 
 		/// <summary>
 		/// Return a list populated with the account names
@@ -415,7 +415,7 @@ namespace Couatl2
 		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, 
 			decimal cost, decimal commission, DateTime date)
 		{
-            //TODO: Replace this with call to GetAccountIdFromName
+			//TODO: Replace this with call to GetAccountIdFromName
 
 			// Find the ID of the account.
 			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + accountName + "'");
@@ -449,9 +449,45 @@ namespace Couatl2
 
 		public DataTable GetAccountTransactionTable(string acctName)
 		{
-			// Start with a copy of the Transactions table.
-			DataTable xactList = CurrDataSet.Tables["Transactions"].Copy();
+			// Start with a new table and add the columns we want to display.
+			DataTable xactList = new DataTable("Transactions");
+			xactList.Columns.Add("Date", typeof(DateTime));
+			xactList.Columns.Add("Type", typeof(String));
+			xactList.Columns.Add("Security", typeof(String));
+			xactList.Columns.Add("Quantity", typeof(Decimal));
+			xactList.Columns.Add("Value", typeof(Decimal));
+			xactList.Columns.Add("Running Total", typeof(Decimal));
 
+			Decimal runningTotal = 0;
+
+			// Get the rows from the Transactions table that correspond to the
+			// specified account.
+			UInt32 acctId = GetAccountIdFromName(acctName);
+			if (acctId == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("GetAccountTransactionTable: Error: Account name not found.");
+				return xactList;
+			}
+			DataRow[] xacts = CurrDataSet.Tables["Transactions"].Select("Account = " + acctId.ToString());
+
+			// Sort the rows by date.
+			DataRowDateComparer comp = new DataRowDateComparer();
+			Array.Sort<DataRow>(xacts, comp);
+			// TODO: Create helper function for sorted transactions.
+
+			// Go through each of the rows.
+			foreach (DataRow xact in xacts)
+			{
+				// Create a new row in the target table.
+
+				// Set the date.
+
+				// Set the type, using the string not the enum value.
+				// Set the security, using the symbol string.
+				// Set the quantity.
+				// Set the value.
+				// Set the running total.
+			}
 #if false
 			// Start with a copy of the Accounts table.
 			DataTable acctList = CurrDataSet.Tables["Accounts"].Copy();
@@ -465,15 +501,7 @@ namespace Couatl2
 				acctList.Rows[x]["Value"] = x * 2;
 			}
 #endif // false
-
-			// Remove the Account column.
-			xactList.Columns.Remove("Account");
-
-			// Remove the ID column because that has no meaning to the user.
-			xactList.PrimaryKey = null;
-			xactList.Columns.Remove("ID");
-
-			return xactList;
+				return xactList;
 		}
 
 		public DataTable GetAccountPositionTable(string acctName)
@@ -608,6 +636,21 @@ namespace Couatl2
 				}
 			}
 			return price;
+		}
+	}
+
+	class DataRowDateComparer : IComparer<DataRow>
+	{
+		public int Compare(DataRow a, DataRow b)
+		{
+			DateTime da = Convert.ToDateTime(a["Date"]);
+			DateTime db = Convert.ToDateTime(b["Date"]);
+			if (da < db)
+				return -1;
+			else if (da > db)
+				return 1;
+			else
+				return 0;
 		}
 	}
 }
