@@ -18,6 +18,15 @@ namespace Couatl2
 		internal DataSet CurrDataSet;
 		private static UInt32 CurrSchemaVersion = 3;
 
+		internal enum TransactionType
+		{
+			Buy = 1,
+			Sell,
+			Deposit,
+			Withdrawal,
+			Dividend
+		};
+
 		public Boolean IsDbOpen
 		{
 			get { return CurrDbFilename != null; }
@@ -441,7 +450,7 @@ namespace Couatl2
 			UInt32 secID = Convert.ToUInt32(foundRows[0]["ID"]);
 
 			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
-			newXact["Type"] = 1; // 1 = Buy.
+			newXact["Type"] = TransactionType.Buy;
 			newXact["Security"] = secID;
 			newXact["Quantity"] = quantity;
 			newXact["Value"] = cost;
@@ -619,6 +628,7 @@ namespace Couatl2
 				}
 
 				// Update the quantity
+				// TODO: This does not handle Sell transactions.
 				decimal qtyChange = Convert.ToDecimal(xact["Quantity"]);
 				decimal qtyCurr = Convert.ToDecimal(tgtPos["Quantity"]);
 				qtyCurr += qtyChange;

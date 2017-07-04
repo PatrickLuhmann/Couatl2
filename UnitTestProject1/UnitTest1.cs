@@ -130,7 +130,7 @@ namespace UnitTestProject1
 			newSec["Symbol"] = "XYZ";
 			testApp.CurrDataSet.Tables["Securities"].Rows.Add(newSec);
 
-			UInt32 expType = 1; // Buy
+			UInt32 expType = (UInt32)Couatl2App.TransactionType.Buy;
 			UInt32 expSec = 1; // only symbol so it should always be 1
 			decimal expQty = 123.456M;
 			decimal expVal = 987.654M;
