@@ -226,8 +226,7 @@ namespace Couatl2
 		/// <returns></returns>
 		public bool FindSymbol(string symbol)
 		{
-			DataRow[] foundRows = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
-			if (foundRows.Length == 1)
+			if (GetSecurityIdFromSymbol(symbol) != 0)
 				return true;
 			else
 				return false;
@@ -446,8 +445,7 @@ namespace Couatl2
 			UInt32 acctID = Convert.ToUInt32(foundRows[0]["ID"]);
 
 			// Find the ID of the symbol.
-			foundRows = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
-			UInt32 secID = Convert.ToUInt32(foundRows[0]["ID"]);
+			UInt32 secID = GetSecurityIdFromSymbol(symbol);
 
 			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
 			newXact["Type"] = TransactionType.Buy;
@@ -555,19 +553,7 @@ namespace Couatl2
 				// Add the row to the table.
 				xactList.Rows.Add(newRow);
 			}
-#if false
-			// Start with a copy of the Accounts table.
-			DataTable acctList = CurrDataSet.Tables["Accounts"].Copy();
 
-			// Add a column for Value.
-			DataColumn value = acctList.Columns.Add("Value");
-			// TODO: This is test code to put an arbitrary value into the cell.
-			// Replace it with the real code.
-			for (int x = 0; x < acctList.Rows.Count; x++)
-			{
-				acctList.Rows[x]["Value"] = x * 2;
-			}
-#endif // false
 			return xactList;
 		}
 
@@ -604,8 +590,7 @@ namespace Couatl2
 				// xact has Security, which is the ID in the Securities table.
 				UInt32 secID = Convert.ToUInt32(xact["Security"]);
 				// Look up the ID and get the Symbol string.
-				DataRow[] secRow = CurrDataSet.Tables["Securities"].Select("ID = " + secID.ToString());
-				string secSym = secRow[0]["Symbol"].ToString();
+				String secSym = GetSymbolFromSecurityId(secID);
 				// Look up the symbol in the positions table we are building.
 				DataRow[] symRow = tblPositions.Select("Security = '" + secSym + "'");
 				// It might be present already, or this might be the first time we have seen it.
@@ -684,9 +669,7 @@ namespace Couatl2
 		/// <returns>The price of the security.</returns>
 		internal decimal GetPrice(string symbol)
 		{
-			// Get the ID of the security.
-			DataRow[] secRow = CurrDataSet.Tables["Securities"].Select("Symbol = '" + symbol + "'");
-			UInt32 secID = Convert.ToUInt32(secRow[0]["ID"]);
+			UInt32 secID = GetSecurityIdFromSymbol(symbol);
 
 			// Get the prices for this security.
 			DataRow[] priceRows = CurrDataSet.Tables["Prices"].Select("Security = " + secID.ToString());
