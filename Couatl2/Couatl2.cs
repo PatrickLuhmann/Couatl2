@@ -256,6 +256,20 @@ namespace Couatl2
 		}
 
 		/// <summary>
+		/// Returns the symbol of the security based on its ID.
+		/// </summary>
+		/// <param name="id">The ID of the security's row in the database.</param>
+		/// <returns>The symbol of the security.</returns>
+		internal String GetSymbolFromSecurityId(UInt32 id)
+		{
+			DataRow foundRow = CurrDataSet.Tables["Securities"].Rows.Find(id);
+			if (foundRow == null)
+				return null;
+
+			return foundRow["Symbol"].ToString();
+		}
+
+		/// <summary>
 		/// Put the price into the database
 		/// 
 		/// The specified price is put into the database. If there is a price for
@@ -478,15 +492,44 @@ namespace Couatl2
 			// Go through each of the rows.
 			foreach (DataRow xact in xacts)
 			{
+
 				// Create a new row in the target table.
+				DataRow newRow = xactList.NewRow();
 
 				// Set the date.
+				newRow["Date"] = xact["Date"];
 
 				// Set the type, using the string not the enum value.
+				switch(Convert.ToUInt32(xact["Type"]))
+				{
+					case 1:
+						newRow["Type"] = "Buy";
+						break;
+					case 2:
+						newRow["Type"] = "Sell";
+						break;
+					case 3:
+						newRow["Type"] = "Deposit";
+						break;
+					case 4:
+						newRow["Type"] = "Withdrawal";
+						break;
+					case 5:
+						newRow["Type"] = "Dividend";
+						break;
+					default:
+						newRow["Type"] = "Unknown";
+						break;
+				}
+
 				// Set the security, using the symbol string.
+				newRow["Security"] = GetSymbolFromSecurityId(Convert.ToUInt32(xact["Security"]));
 				// Set the quantity.
 				// Set the value.
 				// Set the running total.
+
+				// Add the row to the table.
+				xactList.Rows.Add(newRow);
 			}
 #if false
 			// Start with a copy of the Accounts table.
@@ -501,7 +544,7 @@ namespace Couatl2
 				acctList.Rows[x]["Value"] = x * 2;
 			}
 #endif // false
-				return xactList;
+			return xactList;
 		}
 
 		public DataTable GetAccountPositionTable(string acctName)

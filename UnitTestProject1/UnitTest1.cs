@@ -8,6 +8,40 @@ namespace UnitTestProject1
 	[TestClass]
 	public class UnitTest1
 	{
+		[TestMethod]
+		public void GetSymbolFromSecurityId_All()
+		{
+			Couatl2App testApp = new Couatl2App();
+			testApp.CreateNewDbFile("test-getsym.xml");
+
+			// Create the securities.
+			string testSecSym = "XYZ";
+			DataRow newSec = testApp.CurrDataSet.Tables["Securities"].NewRow();
+			newSec["Name"] = "Big Band Inc.";
+			newSec["Symbol"] = testSecSym;
+			testApp.CurrDataSet.Tables["Securities"].Rows.Add(newSec);
+			UInt32 secID_XYZ = Convert.ToUInt32(newSec["ID"]);
+
+			testSecSym = "ZYX";
+			newSec = testApp.CurrDataSet.Tables["Securities"].NewRow();
+			newSec["Name"] = "Xcellent Xylophones Corp.";
+			newSec["Symbol"] = testSecSym;
+			testApp.CurrDataSet.Tables["Securities"].Rows.Add(newSec);
+			UInt32 secID_ZYX = Convert.ToUInt32(newSec["ID"]);
+
+			testSecSym = "FUD";
+			newSec = testApp.CurrDataSet.Tables["Securities"].NewRow();
+			newSec["Name"] = "Beware And Be Aware Co.";
+			newSec["Symbol"] = testSecSym;
+			testApp.CurrDataSet.Tables["Securities"].Rows.Add(newSec);
+			UInt32 secID_FUD = Convert.ToUInt32(newSec["ID"]);
+
+			Assert.AreEqual("FUD", testApp.GetSymbolFromSecurityId(secID_FUD));
+			Assert.AreEqual("XYZ", testApp.GetSymbolFromSecurityId(secID_XYZ));
+			Assert.AreEqual("ZYX", testApp.GetSymbolFromSecurityId(secID_ZYX));
+			Assert.AreEqual(null, testApp.GetSymbolFromSecurityId(2112));
+		}
+
 		/// <summary>
 		/// The account name is in the table and returns the correct ID.
 		/// </summary>
