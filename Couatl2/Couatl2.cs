@@ -499,34 +499,49 @@ namespace Couatl2
 				// Set the date.
 				newRow["Date"] = xact["Date"];
 
+				// Set the value.
+				newRow["Value"] = xact["Value"];
+
 				// Set the type, using the string not the enum value.
-				switch(Convert.ToUInt32(xact["Type"]))
+				// Also modify the running total based on the transaction.
+				switch (Convert.ToUInt32(xact["Type"]))
 				{
 					case 1:
 						newRow["Type"] = "Buy";
+						// Subtract from the running total.
+						runningTotal -= Convert.ToDecimal(newRow["Value"]);
 						break;
 					case 2:
 						newRow["Type"] = "Sell";
+						// Add to the running total.
+						runningTotal += Convert.ToDecimal(newRow["Value"]);
 						break;
 					case 3:
 						newRow["Type"] = "Deposit";
+						// Add to the running total.
+						runningTotal += Convert.ToDecimal(newRow["Value"]);
 						break;
 					case 4:
 						newRow["Type"] = "Withdrawal";
+						// Subtract from the running total.
+						runningTotal += Convert.ToDecimal(newRow["Value"]);
 						break;
 					case 5:
 						newRow["Type"] = "Dividend";
+						// Add to the running total.
+						runningTotal += Convert.ToDecimal(newRow["Value"]);
 						break;
 					default:
 						newRow["Type"] = "Unknown";
 						break;
 				}
+				newRow["Running Total"] = runningTotal;
 
 				// Set the security, using the symbol string.
 				newRow["Security"] = GetSymbolFromSecurityId(Convert.ToUInt32(xact["Security"]));
+
 				// Set the quantity.
-				// Set the value.
-				// Set the running total.
+				newRow["Quantity"] = xact["Quantity"];
 
 				// Add the row to the table.
 				xactList.Rows.Add(newRow);
