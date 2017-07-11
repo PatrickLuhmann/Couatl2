@@ -378,13 +378,20 @@ namespace Couatl2
 		}
 
 		/// <summary>
-		/// Return a list populated with the account names
+		/// Returns a list populated with the account names. If there are no accounts,
+		/// the list will be empty.
 		/// </summary>
 		/// <returns>A List (of type string) with the names of the accounts in it.</returns>
 		public List<string> GetAccountNameList()
 		{
-			// Go through the rows of the Accounts table and extract the account names.
+			// Will always return a List, even if it is empty, so always allocate it.
 			List<string> acctNameList = new List<string>();
+
+			// If there is no DB then there are no accounts.
+			if (!IsDbOpen)
+				return acctNameList;
+
+			// Go through the rows of the Accounts table and extract the account names.
 			DataTable acctTable = CurrDataSet.Tables["Accounts"];
 
 			foreach (DataRow dr in acctTable.Rows)
