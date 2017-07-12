@@ -239,9 +239,18 @@ namespace Couatl2
 		{
 			AccountTransactionsView.DataSource = AppObj.GetAccountTransactionTable(AccountComboBox.SelectedItem.ToString());
 		}
+
 		private void UpdateAccountPositionsView()
 		{
-			AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
+			//TODO: This assumes that the AccountComboBox has been used, which might not always be the case.
+			// At least during early development, there were things that the user could do that invokes this
+			// method before the Account tab was visited, which I believe is where the combo box is initially
+			// populated. Either it needs to be populated immediately (but what about when a file hasn't been opened???)
+			// or this code needs to be more robust, such as by checking SelectedItem for null before calling
+			// ToString().
+			// https://github.com/PatrickLuhmann/Couatl2/issues/25
+			if (AccountComboBox.SelectedItem != null)
+				AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
 		}
 
 		private void AccountComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -269,6 +278,71 @@ namespace Couatl2
 				if (AccountComboBox.SelectedIndex == -1 && AccountComboBox.Items.Count > 0)
 					AccountComboBox.SelectedIndex = 0;
 			}
+		}
+
+		private void depositCashToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// If there is no account in which to deposit the cash, don't show
+			// the dialog box.
+			List<string> accts = AppObj.GetAccountNameList();
+			if (accts.Count == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("Deposit Cash Transaction Dialog :: No accounts.");
+				MessageBox.Show("ERROR: There are no accounts. Please add an account or open a file that contains an account.", "No Account Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			// Create, populate, and show a DepositCashDialog.
+			DepositCashDialog dlg = new DepositCashDialog();
+			foreach (string name in accts)
+				dlg.AddAccountName(name);
+			dlg.SetAccount(AccountComboBox.SelectedItem);
+
+			do
+			{
+				DialogResult result = dlg.ShowDialog();
+
+				if (result == DialogResult.OK)
+				{
+					System.Diagnostics.Debug.WriteLine("Deposit Cash Transaction Dialog :: Save");
+					System.Diagnostics.Debug.WriteLine("Account: " + dlg.GetAccountName());
+					System.Diagnostics.Debug.WriteLine("Quantity: " + dlg.GetQuantity());
+					System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
+
+					decimal quantity;
+
+					// Validate the types of the values that the user provided. 
+					try
+					{
+						quantity = Convert.ToDecimal(dlg.GetQuantity());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Quantity must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+
+					DateTime date = dlg.GetDate();
+
+					string account = dlg.GetAccountName();
+
+					// Update the database with the details of this deposit.
+					if (AppObj.ProcessDepositCashTransaction(account, quantity, date))
+					{
+						// Update Account tab (transaction view only, does not change positions)
+						// TODO: If Cash becomes a position then do more here.
+						UpdateAccountTransactionsView();
+
+						break;
+					}
+
+					MessageBox.Show("ERROR: Could not process deposit cash transaction. Please check for errors in the input data.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				else
+					break;
+
+			} while (true);
 		}
 	}
 }

@@ -112,6 +112,67 @@ namespace UnitTestProject1
 		}
 
 		[TestMethod]
+		public void AddDepositCashTransaction_Valid()
+		{
+			UInt32 expType = (UInt32)Couatl2App.TransactionType.Deposit;
+			decimal expValue = 123.45M;
+			DateTime expDate = new DateTime(2017, 7, 12);
+			UInt32 expAcct = 1;
+			bool res = testApp2.ProcessDepositCashTransaction("Account1", expValue, expDate);
+			Assert.AreEqual(true, res);
+			
+			// Verify that the transaction table has only one row.
+			DataTable testXact = testApp2.CurrDataSet.Tables["Transactions"];
+			Assert.AreEqual(1, testXact.Rows.Count);
+
+			// Verify the row info.
+			DataRow actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[0];
+			Assert.AreEqual(1, actXact["ID"]); // increments each time
+			Assert.AreEqual(expType, actXact["Type"]);
+			Assert.AreEqual(expValue, actXact["Value"]);
+			Assert.AreEqual(expDate, actXact["Date"]);
+			Assert.AreEqual(expAcct, actXact["Account"]);
+
+			// Try another transaction.
+			expValue = 9876.54M;
+			expDate = new DateTime(2016, 10, 31);
+			expAcct = 2;
+			res = testApp2.ProcessDepositCashTransaction("Account2", expValue, expDate);
+			Assert.AreEqual(true, res);
+
+			// Verify that the transaction table now has two rows.
+			testXact = testApp2.CurrDataSet.Tables["Transactions"];
+			Assert.AreEqual(2, testXact.Rows.Count);
+
+			// Verify the row info.
+			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[1];
+			Assert.AreEqual(2, actXact["ID"]); // increments each time
+			Assert.AreEqual(expType, actXact["Type"]);
+			Assert.AreEqual(expValue, actXact["Value"]);
+			Assert.AreEqual(expDate, actXact["Date"]);
+			Assert.AreEqual(expAcct, actXact["Account"]);
+
+			// Try yet another transaction.
+			expValue = 2461.334M;
+			expDate = new DateTime(2015, 3, 14);
+			expAcct = 3;
+			res = testApp2.ProcessDepositCashTransaction("Account3", expValue, expDate);
+			Assert.AreEqual(true, res);
+
+			// Verify that the transaction table now has three rows.
+			testXact = testApp2.CurrDataSet.Tables["Transactions"];
+			Assert.AreEqual(3, testXact.Rows.Count);
+
+			// Verify the row info.
+			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[2];
+			Assert.AreEqual(3, actXact["ID"]); // increments each time
+			Assert.AreEqual(expType, actXact["Type"]);
+			Assert.AreEqual(expValue, actXact["Value"]);
+			Assert.AreEqual(expDate, actXact["Date"]);
+			Assert.AreEqual(expAcct, actXact["Account"]);
+		}
+
+		[TestMethod]
 		public void GetAccountNameList_ThreeAccounts()
 		{
 			List<string> actList;

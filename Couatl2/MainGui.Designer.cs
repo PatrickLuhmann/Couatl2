@@ -385,6 +385,7 @@
 			this.depositCashToolStripMenuItem.Name = "depositCashToolStripMenuItem";
 			this.depositCashToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
 			this.depositCashToolStripMenuItem.Text = "Deposit Cash";
+			this.depositCashToolStripMenuItem.Click += new System.EventHandler(this.depositCashToolStripMenuItem_Click);
 			// 
 			// withdrawCashToolStripMenuItem
 			// 

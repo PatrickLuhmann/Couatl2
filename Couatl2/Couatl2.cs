@@ -331,6 +331,19 @@ namespace Couatl2
 			CurrDataSet.Tables["Prices"].AcceptChanges();
 		}
 
+		internal bool ProcessDepositCashTransaction(string account, decimal value, DateTime date)
+		{
+			// Verify the account name.
+			if (!FindAccount(account))
+				return false;
+
+			AddDepositCashTransaction(account, value, date);
+
+			SaveDbFile();
+
+			return true;
+		}
+
 		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, 
 			decimal cost, decimal commission, DateTime date)
 		{
@@ -465,6 +478,34 @@ namespace Couatl2
 			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
 		}
 
+		/// <summary>
+		/// Add a deposit cash transaction to the database
+		/// 
+		/// This method does not do any error checking. It assumes that the account
+		/// is already present in the database. It assumes that the quantity and date values
+		/// are reasonable and make sense within the context of the database.
+		/// 
+		/// This method does not catch any exceptions.
+		/// </summary>
+		/// <param name="accountName">The name of the account.</param>
+		/// <param name="value">The amount of cash.</param>
+		/// <param name="date">The date on which the cash was deposited.</param>
+		internal void AddDepositCashTransaction(string accountName, decimal value, DateTime date)
+		{
+			// Find the ID of the account.
+			UInt32 acctID = GetAccountIdFromName(accountName);
+
+			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = TransactionType.Deposit;
+			newXact["Security"] = 0; // not used
+			newXact["Quantity"] = 0; // not used
+			newXact["Value"] = value;
+			newXact["Fee"] = 0; // not used
+			newXact["Date"] = date;
+			newXact["Account"] = acctID;
+			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+		}
+
 		public void CreateAccount(string accountName, string institutionName)
 		{
 			DataRow newAcct = CurrDataSet.Tables["Accounts"].NewRow();
@@ -594,10 +635,21 @@ namespace Couatl2
 			// (add for purchase and subtract for sell).
 			foreach (DataRow xact in xacts)
 			{
+				// Ignore Deposit, Withdrawal, and Dividend transactions because
+				// they do not modify the number of shares.
+				UInt32 type = Convert.ToUInt32(xact["Type"]);
+				if (type == (UInt32)Couatl2App.TransactionType.Deposit ||
+					type == (UInt32)Couatl2App.TransactionType.Withdrawal ||
+					type == (UInt32)Couatl2App.TransactionType.Dividend)
+				{
+					continue;
+				}
+
 				// xact has Security, which is the ID in the Securities table.
 				UInt32 secID = Convert.ToUInt32(xact["Security"]);
 				// Look up the ID and get the Symbol string.
 				String secSym = GetSymbolFromSecurityId(secID);
+
 				// Look up the symbol in the positions table we are building.
 				DataRow[] symRow = tblPositions.Select("Security = '" + secSym + "'");
 				// It might be present already, or this might be the first time we have seen it.
