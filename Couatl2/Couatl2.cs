@@ -232,6 +232,14 @@ namespace Couatl2
 				return false;
 		}
 
+		/// <summary>
+		/// Adds a new security to the Securities table.
+		/// Does not check for duplicates. It is the responsibility
+		/// of the sender to make sure it is truly new.
+		/// </summary>
+		/// <param name="sym">The symbol of the security.</param>
+		/// <param name="name">The name of the security.</param>
+		/// <returns></returns>
 		public bool AddNewSecurity(string sym, string name)
 		{
 			if (System.Text.RegularExpressions.Regex.IsMatch(sym, @"^[A-Z]{1,5}$"))

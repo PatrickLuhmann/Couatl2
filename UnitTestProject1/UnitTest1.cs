@@ -154,6 +154,43 @@ namespace UnitTestProject1
 		}
 
 		[TestMethod]
+		public void AddNewSecurity_ValidSym()
+		{
+			int numSec = testApp2.CurrDataSet.Tables["Securities"].Rows.Count;
+
+			bool res = testApp2.AddNewSecurity("TEST", "Tasty Test Inc");
+
+			Assert.AreEqual(true, res);
+			Assert.AreEqual(numSec + 1, testApp2.CurrDataSet.Tables["Securities"].Rows.Count);
+		}
+
+		[TestMethod]
+		public void AddNewSecurity_InvalidSym()
+		{
+			int numSec = testApp2.CurrDataSet.Tables["Securities"].Rows.Count;
+
+			bool res = testApp2.AddNewSecurity("N0NUM", "No numbers allowed (at this time)");
+			Assert.AreEqual(false, res);
+			Assert.AreEqual(numSec, testApp2.CurrDataSet.Tables["Securities"].Rows.Count);
+
+			res = testApp2.AddNewSecurity("NO$YM", "No symbols allowed");
+			Assert.AreEqual(false, res);
+			Assert.AreEqual(numSec, testApp2.CurrDataSet.Tables["Securities"].Rows.Count);
+
+			res = testApp2.AddNewSecurity("TOLONG", "Too long, 5 char max");
+			Assert.AreEqual(false, res);
+			Assert.AreEqual(numSec, testApp2.CurrDataSet.Tables["Securities"].Rows.Count);
+
+			res = testApp2.AddNewSecurity("NOLoW", "No lower case letters allowed");
+			Assert.AreEqual(false, res);
+			Assert.AreEqual(numSec, testApp2.CurrDataSet.Tables["Securities"].Rows.Count);
+
+			res = testApp2.AddNewSecurity("", "Too short, 1 char min");
+			Assert.AreEqual(false, res);
+			Assert.AreEqual(numSec, testApp2.CurrDataSet.Tables["Securities"].Rows.Count);
+		}
+
+		[TestMethod]
 		public void GetAccountPositionTable_OnePosInOneAcct()
 		{
 			DataTable dstPosTable = testApp2.GetAccountPositionTable("GAPT");
