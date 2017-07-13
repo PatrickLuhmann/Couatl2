@@ -242,13 +242,7 @@ namespace Couatl2
 
 		private void UpdateAccountPositionsView()
 		{
-			//TODO: This assumes that the AccountComboBox has been used, which might not always be the case.
-			// At least during early development, there were things that the user could do that invokes this
-			// method before the Account tab was visited, which I believe is where the combo box is initially
-			// populated. Either it needs to be populated immediately (but what about when a file hasn't been opened???)
-			// or this code needs to be more robust, such as by checking SelectedItem for null before calling
-			// ToString().
-			// https://github.com/PatrickLuhmann/Couatl2/issues/25
+			// Only update if an account has been selected.
 			if (AccountComboBox.SelectedItem != null)
 				AccountPositionsView.DataSource = AppObj.GetAccountPositionTable(AccountComboBox.SelectedItem.ToString());
 		}

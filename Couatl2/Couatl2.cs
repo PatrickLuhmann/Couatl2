@@ -672,10 +672,15 @@ namespace Couatl2
 				}
 
 				// Update the quantity
-				// TODO: This does not handle Sell transactions.
 				decimal qtyChange = Convert.ToDecimal(xact["Quantity"]);
 				decimal qtyCurr = Convert.ToDecimal(tgtPos["Quantity"]);
-				qtyCurr += qtyChange;
+				if (type == (UInt32)Couatl2App.TransactionType.Buy)
+					qtyCurr += qtyChange;
+				else if (type == (UInt32)Couatl2App.TransactionType.Sell)
+					qtyCurr -= qtyChange;
+				else
+					throw new InvalidOperationException("Invalid transaction type");
+
 				tgtPos["Quantity"] = qtyCurr;
 			}
 

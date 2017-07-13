@@ -10,6 +10,7 @@ namespace UnitTestProject1
 	public class UnitTest1
 	{
 		Couatl2App testApp2;
+		UInt32 acctID_GAPT;
 		UInt32 secID_XYZ, secID_ZYX, secID_FUD;
 
 		[TestInitialize]
@@ -34,6 +35,12 @@ namespace UnitTestProject1
 			newAcct["Name"] = "Account3";
 			newAcct["Institution"] = "Institution3";
 			testApp2.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+
+			newAcct = testApp2.CurrDataSet.Tables["Accounts"].NewRow();
+			newAcct["Name"] = "GAPT";
+			newAcct["Institution"] = "Institution4";
+			testApp2.CurrDataSet.Tables["Accounts"].Rows.Add(newAcct);
+			acctID_GAPT = Convert.ToUInt32(newAcct["ID"]);
 
 			// Create the securities.
 			string testSecSym = "XYZ";
@@ -103,6 +110,41 @@ namespace UnitTestProject1
 			testApp2.AddPrice("FUD", 895.135M, date, false);
 			date = new DateTime(1973, 4, 12);
 			testApp2.AddPrice("FUD", 213.749M, date, false);
+
+			// Create some transactions.
+
+			date = new DateTime(2017, 1, 1);
+			DataRow newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Deposit;
+			newXact["Security"] = 0;
+			newXact["Quantity"] = 0;
+			newXact["Value"] = 10000.00M;
+			newXact["Fee"] = 0;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
+			date = new DateTime(2017, 1, 6);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Buy;
+			newXact["Security"] = secID_XYZ;
+			newXact["Quantity"] = 100;
+			newXact["Value"] = 1000.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
+			date = new DateTime(2017, 1, 11);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Sell;
+			newXact["Security"] = secID_XYZ;
+			newXact["Quantity"] = 40;
+			newXact["Value"] = 440.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
 		}
 
 		[TestCleanup]
@@ -112,22 +154,33 @@ namespace UnitTestProject1
 		}
 
 		[TestMethod]
+		public void GetAccountPositionTable_OnePosInOneAcct()
+		{
+			DataTable dstPosTable = testApp2.GetAccountPositionTable("GAPT");
+			Assert.AreEqual(1, dstPosTable.Rows.Count);
+			Assert.AreEqual("XYZ", dstPosTable.Rows[0]["Security"]);
+			Assert.AreEqual(60.0M, dstPosTable.Rows[0]["Quantity"]);
+			Assert.AreEqual(3522.12M, dstPosTable.Rows[0]["Value"]);
+		}
+
+		[TestMethod]
 		public void AddDepositCashTransaction_Valid()
 		{
 			UInt32 expType = (UInt32)Couatl2App.TransactionType.Deposit;
 			decimal expValue = 123.45M;
 			DateTime expDate = new DateTime(2017, 7, 12);
 			UInt32 expAcct = 1;
+			int expNumRows = testApp2.CurrDataSet.Tables["Transactions"].Rows.Count;
 			bool res = testApp2.ProcessDepositCashTransaction("Account1", expValue, expDate);
 			Assert.AreEqual(true, res);
 			
-			// Verify that the transaction table has only one row.
+			// Verify that the transaction table has one additional row.
 			DataTable testXact = testApp2.CurrDataSet.Tables["Transactions"];
-			Assert.AreEqual(1, testXact.Rows.Count);
+			Assert.AreEqual(expNumRows + 1, testXact.Rows.Count);
 
 			// Verify the row info.
-			DataRow actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[0];
-			Assert.AreEqual(1, actXact["ID"]); // increments each time
+			DataRow actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows];
+			Assert.AreEqual(expNumRows + 1, actXact["ID"]); // increments each time
 			Assert.AreEqual(expType, actXact["Type"]);
 			Assert.AreEqual(expValue, actXact["Value"]);
 			Assert.AreEqual(expDate, actXact["Date"]);
@@ -140,13 +193,13 @@ namespace UnitTestProject1
 			res = testApp2.ProcessDepositCashTransaction("Account2", expValue, expDate);
 			Assert.AreEqual(true, res);
 
-			// Verify that the transaction table now has two rows.
+			// Verify that the transaction table now has two additional rows.
 			testXact = testApp2.CurrDataSet.Tables["Transactions"];
-			Assert.AreEqual(2, testXact.Rows.Count);
+			Assert.AreEqual(expNumRows + 2, testXact.Rows.Count);
 
 			// Verify the row info.
-			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[1];
-			Assert.AreEqual(2, actXact["ID"]); // increments each time
+			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows + 1];
+			Assert.AreEqual(expNumRows + 2, actXact["ID"]); // increments each time
 			Assert.AreEqual(expType, actXact["Type"]);
 			Assert.AreEqual(expValue, actXact["Value"]);
 			Assert.AreEqual(expDate, actXact["Date"]);
@@ -159,13 +212,13 @@ namespace UnitTestProject1
 			res = testApp2.ProcessDepositCashTransaction("Account3", expValue, expDate);
 			Assert.AreEqual(true, res);
 
-			// Verify that the transaction table now has three rows.
+			// Verify that the transaction table now has three additional rows.
 			testXact = testApp2.CurrDataSet.Tables["Transactions"];
-			Assert.AreEqual(3, testXact.Rows.Count);
+			Assert.AreEqual(expNumRows + 3, testXact.Rows.Count);
 
 			// Verify the row info.
-			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[2];
-			Assert.AreEqual(3, actXact["ID"]); // increments each time
+			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows + 2];
+			Assert.AreEqual(expNumRows + 3, actXact["ID"]); // increments each time
 			Assert.AreEqual(expType, actXact["Type"]);
 			Assert.AreEqual(expValue, actXact["Value"]);
 			Assert.AreEqual(expDate, actXact["Date"]);
@@ -173,15 +226,16 @@ namespace UnitTestProject1
 		}
 
 		[TestMethod]
-		public void GetAccountNameList_ThreeAccounts()
+		public void GetAccountNameList_AllAccounts()
 		{
 			List<string> actList;
 
 			actList = testApp2.GetAccountNameList();
-			Assert.AreEqual(3, actList.Count);
+			Assert.AreEqual(4, actList.Count);
 			Assert.AreEqual("Account1", actList[0]);
 			Assert.AreEqual("Account2", actList[1]);
 			Assert.AreEqual("Account3", actList[2]);
+			Assert.AreEqual("GAPT", actList[3]);
 		}
 
 		[TestMethod]
@@ -253,6 +307,8 @@ namespace UnitTestProject1
 		[TestMethod]
 		public void AddPurchase_FirstXact()
 		{
+			int expNumRows = testApp2.CurrDataSet.Tables["Transactions"].Rows.Count;
+
 			UInt32 expType = (UInt32)Couatl2App.TransactionType.Buy;
 			UInt32 expSec = secID_XYZ;
 			decimal expQty = 123.456M;
@@ -260,15 +316,16 @@ namespace UnitTestProject1
 			decimal expComm = 7.89M;
 			DateTime expDate = new DateTime(2016, 9, 4);
 			UInt32 expAcct = 1;
+
 			testApp2.AddPurchaseTransaction("Account1", "XYZ", expQty, expVal, expComm, expDate);
 
-			// Verify that the transaction table has only one row.
+			// Verify that the transaction table has only one additional row.
 			DataTable testXact = testApp2.CurrDataSet.Tables["Transactions"];
-			Assert.AreEqual(1, testXact.Rows.Count);
+			Assert.AreEqual(expNumRows + 1, testXact.Rows.Count);
 
 			// Verify the row info.
-			DataRow actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[0];
-			Assert.AreEqual(1, actXact["ID"]);
+			DataRow actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows];
+			Assert.AreEqual(expNumRows + 1, actXact["ID"]);
 			Assert.AreEqual(expType, actXact["Type"]);
 			Assert.AreEqual(expSec, actXact["Security"]);
 			Assert.AreEqual(expQty, actXact["Quantity"]);
