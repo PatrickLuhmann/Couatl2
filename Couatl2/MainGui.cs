@@ -338,5 +338,74 @@ namespace Couatl2
 
 			} while (true);
 		}
+
+		private void recordCashDividendToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// If there is no account in which to deposit the cash, don't show
+			// the dialog box.
+			List<string> accts = AppObj.GetAccountNameList();
+			if (accts.Count == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("Record Cash Dividend Transaction Dialog :: No accounts.");
+				MessageBox.Show("ERROR: There are no accounts. Please add an account or open a file that contains an account.", "No Account Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			// Create, populate, and show a RecordCashDividendDialog.
+			RecordCashDividendDialog dlg = new RecordCashDividendDialog();
+			foreach (string name in accts)
+				dlg.AddAccountName(name);
+			dlg.SetAccount(AccountComboBox.SelectedItem);
+
+			do
+			{
+				DialogResult result = dlg.ShowDialog();
+
+				if (result == DialogResult.OK)
+				{
+					System.Diagnostics.Debug.WriteLine("Record Cash Dividend Transaction Dialog :: Save");
+					System.Diagnostics.Debug.WriteLine("Account: " + dlg.GetAccountName());
+					System.Diagnostics.Debug.WriteLine("Security: " + dlg.GetSecurity());
+					System.Diagnostics.Debug.WriteLine("Value: " + dlg.GetValue());
+					System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
+
+					string security = dlg.GetSecurity();
+
+					decimal value;
+
+					// Validate the types of the values that the user provided. 
+					try
+					{
+						value = Convert.ToDecimal(dlg.GetValue());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Value must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+
+					DateTime date = dlg.GetDate();
+
+					string account = dlg.GetAccountName();
+
+					// Update the database with the details of this deposit.
+					if (AppObj.ProcessRecordCashDividendTransaction(account, security, value, date))
+					{
+						// Update Account tab (transaction view only, does not change positions)
+						// TODO: If Cash becomes a position then do more here.
+						UpdateAccountTransactionsView();
+
+						break;
+					}
+
+					MessageBox.Show("ERROR: Could not process record cash dividend transaction. Please check for errors in the input data.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				else
+					break;
+
+			} while (true);
+
+		}
 	}
 }

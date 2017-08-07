@@ -263,6 +263,83 @@ namespace UnitTestProject1
 		}
 
 		[TestMethod]
+		public void AddCashDividendTransaction_Valid()
+		{
+			UInt32 expType = (UInt32)Couatl2App.TransactionType.Dividend;
+			decimal expValue = 123.45M;
+			UInt32 expSec = 1;
+			DateTime expDate = new DateTime(2017, 8, 7);
+			UInt32 expAcct = 1;
+			int expNumRows = testApp2.CurrDataSet.Tables["Transactions"].Rows.Count;
+			bool res = testApp2.ProcessRecordCashDividendTransaction("Account1", "XYZ", expValue, expDate);
+			Assert.AreEqual(true, res);
+
+			// Verify that the transaction table has one additional row.
+			DataTable testXact = testApp2.CurrDataSet.Tables["Transactions"];
+			Assert.AreEqual(expNumRows + 1, testXact.Rows.Count);
+
+			// Verify the row info.
+			DataRow actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows];
+			Assert.AreEqual(expNumRows + 1, actXact["ID"]); // increments each time
+			Assert.AreEqual(expType, actXact["Type"]);
+			Assert.AreEqual(expSec, actXact["Security"]);
+			Assert.AreEqual(expValue, actXact["Value"]);
+			Assert.AreEqual(expDate, actXact["Date"]);
+			Assert.AreEqual(expAcct, actXact["Account"]);
+
+			// Try another transaction.
+			expValue = 9876.54M;
+			expSec = 2;
+			expDate = new DateTime(2016, 10, 31);
+			expAcct = 2;
+			res = testApp2.ProcessRecordCashDividendTransaction("Account2", "ZYX", expValue, expDate);
+			Assert.AreEqual(true, res);
+
+			// Verify that the transaction table now has two additional rows.
+			testXact = testApp2.CurrDataSet.Tables["Transactions"];
+			Assert.AreEqual(expNumRows + 2, testXact.Rows.Count);
+
+			// Verify the row info.
+			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows + 1];
+			Assert.AreEqual(expNumRows + 2, actXact["ID"]); // increments each time
+			Assert.AreEqual(expType, actXact["Type"]);
+			Assert.AreEqual(expSec, actXact["Security"]);
+			Assert.AreEqual(expValue, actXact["Value"]);
+			Assert.AreEqual(expDate, actXact["Date"]);
+			Assert.AreEqual(expAcct, actXact["Account"]);
+
+			// Try yet another transaction.
+			expValue = 2461.334M;
+			expSec = 3;
+			expDate = new DateTime(2015, 3, 14);
+			expAcct = 3;
+			res = testApp2.ProcessRecordCashDividendTransaction("Account3", "FUD", expValue, expDate);
+			Assert.AreEqual(true, res);
+
+			// Verify that the transaction table now has three additional rows.
+			testXact = testApp2.CurrDataSet.Tables["Transactions"];
+			Assert.AreEqual(expNumRows + 3, testXact.Rows.Count);
+
+			// Verify the row info.
+			actXact = testApp2.CurrDataSet.Tables["Transactions"].Rows[expNumRows + 2];
+			Assert.AreEqual(expNumRows + 3, actXact["ID"]); // increments each time
+			Assert.AreEqual(expType, actXact["Type"]);
+			Assert.AreEqual(expSec, actXact["Security"]);
+			Assert.AreEqual(expValue, actXact["Value"]);
+			Assert.AreEqual(expDate, actXact["Date"]);
+			Assert.AreEqual(expAcct, actXact["Account"]);
+		}
+
+		[TestMethod]
+		public void AddCashDividendTransaction_InvalidSymbol()
+		{
+			decimal expValue = 2.23M;
+			DateTime expDate = new DateTime(2017, 8, 7);
+			bool res = testApp2.ProcessRecordCashDividendTransaction("Account1", "BLAH", expValue, expDate);
+			Assert.AreEqual(false, res);
+		}
+
+		[TestMethod]
 		public void GetAccountNameList_AllAccounts()
 		{
 			List<string> actList;

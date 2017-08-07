@@ -74,6 +74,12 @@
     <Compile Include="PurchaseTransactionDialog.Designer.cs">
       <DependentUpon>PurchaseTransactionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="RecordCashDividendDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RecordCashDividendDialog.Designer.cs">
+      <DependentUpon>RecordCashDividendDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CreateAccountDialog.resx">
       <DependentUpon>CreateAccountDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -94,6 +100,9 @@
     </Compile>
     <EmbeddedResource Include="PurchaseTransactionDialog.resx">
       <DependentUpon>PurchaseTransactionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RecordCashDividendDialog.resx">
+      <DependentUpon>RecordCashDividendDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

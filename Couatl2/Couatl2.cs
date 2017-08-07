@@ -352,6 +352,23 @@ namespace Couatl2
 			return true;
 		}
 
+		internal bool ProcessRecordCashDividendTransaction(string account, string security, decimal value, DateTime date)
+		{
+			// Verify the account name.
+			if (!FindAccount(account))
+				return false;
+
+			// Verify the security.
+			if (!FindSymbol(security))
+				return false;
+
+			AddCashDividendTransaction(account, security, value, date);
+
+			SaveDbFile();
+
+			return true;
+		}
+
 		internal bool ProcessPurchaseTransaction(string account, string symbol, decimal quantity, 
 			decimal cost, decimal commission, DateTime date)
 		{
@@ -506,6 +523,39 @@ namespace Couatl2
 			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
 			newXact["Type"] = TransactionType.Deposit;
 			newXact["Security"] = 0; // not used
+			newXact["Quantity"] = 0; // not used
+			newXact["Value"] = value;
+			newXact["Fee"] = 0; // not used
+			newXact["Date"] = date;
+			newXact["Account"] = acctID;
+			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+		}
+
+		/// <summary>
+		/// Add a cash dividend transaction to the database
+		/// 
+		/// This method does not do any error checking. It assumes that the account
+		/// is already present in the database. It assumes that the security, value,
+		/// and date values are reasonable and make sense within the context of the
+		/// database.
+		/// 
+		/// This method does not catch any exceptions.
+		/// </summary>
+		/// <param name="accountName">The name of the account.</param>
+		/// <param name="security">The security paying the dividend.</param>
+		/// <param name="value">The amount of cash.</param>
+		/// <param name="date">The date on which the dividend was deposited.</param>
+		internal void AddCashDividendTransaction(string accountName, string security, decimal value, DateTime date)
+		{
+			// Find the ID of the account.
+			UInt32 acctID = GetAccountIdFromName(accountName);
+
+			// Find the ID of the security.
+			UInt32 secID = GetSecurityIdFromSymbol(security);
+
+			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = TransactionType.Dividend;
+			newXact["Security"] = secID;
 			newXact["Quantity"] = 0; // not used
 			newXact["Value"] = value;
 			newXact["Fee"] = 0; // not used

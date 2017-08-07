@@ -37,6 +37,11 @@
 			this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.transactionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.depositCashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.withdrawCashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.buySecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sellSecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.MainTabControl = new System.Windows.Forms.TabControl();
@@ -58,11 +63,7 @@
 			this.labelAccount = new System.Windows.Forms.Label();
 			this.SecurityTab = new System.Windows.Forms.TabPage();
 			this.label3 = new System.Windows.Forms.Label();
-			this.transactionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.depositCashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.withdrawCashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.buySecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.sellSecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.recordCashDividendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.MainMenuStrip.SuspendLayout();
 			this.MainTabControl.SuspendLayout();
 			this.SummaryTab.SuspendLayout();
@@ -103,27 +104,27 @@
 			// newToolStripMenuItem
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.newToolStripMenuItem.Text = "New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// closeToolStripMenuItem
 			// 
 			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.closeToolStripMenuItem.Text = "Close";
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -149,6 +150,43 @@
 			this.deleteAccountToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
 			this.deleteAccountToolStripMenuItem.Text = "Delete Account";
 			// 
+			// transactionToolStripMenuItem
+			// 
+			this.transactionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.depositCashToolStripMenuItem,
+            this.withdrawCashToolStripMenuItem,
+            this.buySecurityToolStripMenuItem,
+            this.sellSecurityToolStripMenuItem,
+            this.recordCashDividendToolStripMenuItem});
+			this.transactionToolStripMenuItem.Name = "transactionToolStripMenuItem";
+			this.transactionToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
+			this.transactionToolStripMenuItem.Text = "Transaction";
+			// 
+			// depositCashToolStripMenuItem
+			// 
+			this.depositCashToolStripMenuItem.Name = "depositCashToolStripMenuItem";
+			this.depositCashToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.depositCashToolStripMenuItem.Text = "Deposit Cash";
+			this.depositCashToolStripMenuItem.Click += new System.EventHandler(this.depositCashToolStripMenuItem_Click);
+			// 
+			// withdrawCashToolStripMenuItem
+			// 
+			this.withdrawCashToolStripMenuItem.Name = "withdrawCashToolStripMenuItem";
+			this.withdrawCashToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.withdrawCashToolStripMenuItem.Text = "Withdraw Cash";
+			// 
+			// buySecurityToolStripMenuItem
+			// 
+			this.buySecurityToolStripMenuItem.Name = "buySecurityToolStripMenuItem";
+			this.buySecurityToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.buySecurityToolStripMenuItem.Text = "Buy Security";
+			// 
+			// sellSecurityToolStripMenuItem
+			// 
+			this.sellSecurityToolStripMenuItem.Name = "sellSecurityToolStripMenuItem";
+			this.sellSecurityToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.sellSecurityToolStripMenuItem.Text = "Sell Security";
+			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -160,7 +198,7 @@
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
 			this.aboutToolStripMenuItem.Text = "About";
 			// 
 			// MainTabControl
@@ -369,41 +407,12 @@
 			this.label3.TabIndex = 0;
 			this.label3.Text = "label3";
 			// 
-			// transactionToolStripMenuItem
+			// recordCashDividendToolStripMenuItem
 			// 
-			this.transactionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.depositCashToolStripMenuItem,
-            this.withdrawCashToolStripMenuItem,
-            this.buySecurityToolStripMenuItem,
-            this.sellSecurityToolStripMenuItem});
-			this.transactionToolStripMenuItem.Name = "transactionToolStripMenuItem";
-			this.transactionToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
-			this.transactionToolStripMenuItem.Text = "Transaction";
-			// 
-			// depositCashToolStripMenuItem
-			// 
-			this.depositCashToolStripMenuItem.Name = "depositCashToolStripMenuItem";
-			this.depositCashToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.depositCashToolStripMenuItem.Text = "Deposit Cash";
-			this.depositCashToolStripMenuItem.Click += new System.EventHandler(this.depositCashToolStripMenuItem_Click);
-			// 
-			// withdrawCashToolStripMenuItem
-			// 
-			this.withdrawCashToolStripMenuItem.Name = "withdrawCashToolStripMenuItem";
-			this.withdrawCashToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.withdrawCashToolStripMenuItem.Text = "Withdraw Cash";
-			// 
-			// buySecurityToolStripMenuItem
-			// 
-			this.buySecurityToolStripMenuItem.Name = "buySecurityToolStripMenuItem";
-			this.buySecurityToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.buySecurityToolStripMenuItem.Text = "Buy Security";
-			// 
-			// sellSecurityToolStripMenuItem
-			// 
-			this.sellSecurityToolStripMenuItem.Name = "sellSecurityToolStripMenuItem";
-			this.sellSecurityToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.sellSecurityToolStripMenuItem.Text = "Sell Security";
+			this.recordCashDividendToolStripMenuItem.Name = "recordCashDividendToolStripMenuItem";
+			this.recordCashDividendToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.recordCashDividendToolStripMenuItem.Text = "Record Cash Dividend";
+			this.recordCashDividendToolStripMenuItem.Click += new System.EventHandler(this.recordCashDividendToolStripMenuItem_Click);
 			// 
 			// MainGui
 			// 
@@ -473,6 +482,7 @@
 		private System.Windows.Forms.ToolStripMenuItem withdrawCashToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem buySecurityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem sellSecurityToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem recordCashDividendToolStripMenuItem;
 	}
 }
 
