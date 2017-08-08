@@ -22,12 +22,17 @@ namespace Couatl2
 			comboBox1.Items.Add(name);
 		}
 
-		public void SetAccount(string name)
+		public void SetAccount(object name)
 		{
-			if (comboBox1.Items.Contains(name))
-				comboBox1.SelectedIndex = comboBox1.Items.IndexOf(name);
-			else if (comboBox1.SelectedIndex == -1)
-				// This feels sloppy but the alternative is too complex for what is really needed.
+			if (name != null)
+			{
+				if (comboBox1.Items.Contains(name))
+					comboBox1.SelectedIndex = comboBox1.Items.IndexOf(name);
+				else if (comboBox1.SelectedIndex == -1)
+					// This feels sloppy but the alternative is too complex for what is really needed.
+					comboBox1.SelectedIndex = 0;
+			}
+			else
 				comboBox1.SelectedIndex = 0;
 		}
 
@@ -83,7 +88,7 @@ namespace Couatl2
 			errorProvider1.SetIconPadding(SymbolTextBox, 2);
 			if (!System.Text.RegularExpressions.Regex.IsMatch(SymbolTextBox.Text, @"^[A-Z]{1,5}$"))
 			{
-				errorProvider1.SetError(SymbolTextBox, "Symbol must be less than six upper-case letters.");
+				errorProvider1.SetError(SymbolTextBox, "Symbol must be fewer than six upper-case letters.");
 			}
 			else
 			{

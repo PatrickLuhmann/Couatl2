@@ -42,6 +42,7 @@
 			this.withdrawCashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.buySecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.sellSecurityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.recordCashDividendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.MainTabControl = new System.Windows.Forms.TabControl();
@@ -59,11 +60,9 @@
 			this.AccountPositionsView = new System.Windows.Forms.DataGridView();
 			this.labelPositions = new System.Windows.Forms.Label();
 			this.AccountComboBox = new System.Windows.Forms.ComboBox();
-			this.button1 = new System.Windows.Forms.Button();
 			this.labelAccount = new System.Windows.Forms.Label();
 			this.SecurityTab = new System.Windows.Forms.TabPage();
 			this.label3 = new System.Windows.Forms.Label();
-			this.recordCashDividendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.MainMenuStrip.SuspendLayout();
 			this.MainTabControl.SuspendLayout();
 			this.SummaryTab.SuspendLayout();
@@ -180,12 +179,20 @@
 			this.buySecurityToolStripMenuItem.Name = "buySecurityToolStripMenuItem";
 			this.buySecurityToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.buySecurityToolStripMenuItem.Text = "Buy Security";
+			this.buySecurityToolStripMenuItem.Click += new System.EventHandler(this.buySecurityToolStripMenuItem_Click);
 			// 
 			// sellSecurityToolStripMenuItem
 			// 
 			this.sellSecurityToolStripMenuItem.Name = "sellSecurityToolStripMenuItem";
 			this.sellSecurityToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.sellSecurityToolStripMenuItem.Text = "Sell Security";
+			// 
+			// recordCashDividendToolStripMenuItem
+			// 
+			this.recordCashDividendToolStripMenuItem.Name = "recordCashDividendToolStripMenuItem";
+			this.recordCashDividendToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.recordCashDividendToolStripMenuItem.Text = "Record Cash Dividend";
+			this.recordCashDividendToolStripMenuItem.Click += new System.EventHandler(this.recordCashDividendToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -302,7 +309,6 @@
 			this.AccountTab.Controls.Add(this.AccountPositionsView);
 			this.AccountTab.Controls.Add(this.labelPositions);
 			this.AccountTab.Controls.Add(this.AccountComboBox);
-			this.AccountTab.Controls.Add(this.button1);
 			this.AccountTab.Controls.Add(this.labelAccount);
 			this.AccountTab.Location = new System.Drawing.Point(4, 32);
 			this.AccountTab.Name = "AccountTab";
@@ -369,16 +375,6 @@
 			this.AccountComboBox.TabIndex = 2;
 			this.AccountComboBox.SelectedIndexChanged += new System.EventHandler(this.AccountComboBox_SelectedIndexChanged);
 			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(843, 7);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(144, 61);
-			this.button1.TabIndex = 1;
-			this.button1.Text = "Purchase";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
-			// 
 			// labelAccount
 			// 
 			this.labelAccount.AutoSize = true;
@@ -406,13 +402,6 @@
 			this.label3.Size = new System.Drawing.Size(68, 23);
 			this.label3.TabIndex = 0;
 			this.label3.Text = "label3";
-			// 
-			// recordCashDividendToolStripMenuItem
-			// 
-			this.recordCashDividendToolStripMenuItem.Name = "recordCashDividendToolStripMenuItem";
-			this.recordCashDividendToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.recordCashDividendToolStripMenuItem.Text = "Record Cash Dividend";
-			this.recordCashDividendToolStripMenuItem.Click += new System.EventHandler(this.recordCashDividendToolStripMenuItem_Click);
 			// 
 			// MainGui
 			// 
@@ -468,7 +457,6 @@
 		private System.Windows.Forms.DataGridView dataGridViewAccountList;
 		private System.Windows.Forms.Label labelAccount;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.DataGridView AccountPositionsView;
 		private System.Windows.Forms.Label labelPositions;
 		private System.Windows.Forms.ComboBox AccountComboBox;

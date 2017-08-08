@@ -105,7 +105,7 @@
 			this.CostTextBox.Location = new System.Drawing.Point(87, 95);
 			this.CostTextBox.Name = "CostTextBox";
 			this.CostTextBox.Size = new System.Drawing.Size(100, 20);
-			this.CostTextBox.TabIndex = 6;
+			this.CostTextBox.TabIndex = 5;
 			// 
 			// label4
 			// 
@@ -121,7 +121,7 @@
 			this.DatePicker.Location = new System.Drawing.Point(87, 147);
 			this.DatePicker.Name = "DatePicker";
 			this.DatePicker.Size = new System.Drawing.Size(200, 20);
-			this.DatePicker.TabIndex = 8;
+			this.DatePicker.TabIndex = 7;
 			// 
 			// label5
 			// 
@@ -138,7 +138,7 @@
 			this.SaveButton.Location = new System.Drawing.Point(50, 194);
 			this.SaveButton.Name = "SaveButton";
 			this.SaveButton.Size = new System.Drawing.Size(75, 23);
-			this.SaveButton.TabIndex = 10;
+			this.SaveButton.TabIndex = 8;
 			this.SaveButton.Text = "Save";
 			this.SaveButton.UseVisualStyleBackColor = true;
 			// 
@@ -148,7 +148,7 @@
 			this.CancelButton.Location = new System.Drawing.Point(158, 194);
 			this.CancelButton.Name = "CancelButton";
 			this.CancelButton.Size = new System.Drawing.Size(75, 23);
-			this.CancelButton.TabIndex = 11;
+			this.CancelButton.TabIndex = 9;
 			this.CancelButton.Text = "Cancel";
 			this.CancelButton.UseVisualStyleBackColor = true;
 			// 
@@ -166,7 +166,7 @@
 			this.CommissionTextBox.Location = new System.Drawing.Point(87, 121);
 			this.CommissionTextBox.Name = "CommissionTextBox";
 			this.CommissionTextBox.Size = new System.Drawing.Size(100, 20);
-			this.CommissionTextBox.TabIndex = 13;
+			this.CommissionTextBox.TabIndex = 6;
 			// 
 			// label7
 			// 
@@ -182,7 +182,7 @@
 			this.SymbolNameTextBox.Location = new System.Drawing.Point(184, 41);
 			this.SymbolNameTextBox.Name = "SymbolNameTextBox";
 			this.SymbolNameTextBox.Size = new System.Drawing.Size(103, 20);
-			this.SymbolNameTextBox.TabIndex = 15;
+			this.SymbolNameTextBox.TabIndex = 3;
 			// 
 			// errorProvider1
 			// 
