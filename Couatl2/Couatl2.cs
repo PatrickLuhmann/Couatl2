@@ -395,6 +395,32 @@ namespace Couatl2
 			return true;
 		}
 
+		internal bool ProcessSellTransaction(string account, string symbol, decimal quantity,
+			decimal proceeds, decimal commission, DateTime date)
+		{
+			// Verify the account name.
+			if (!FindAccount(account))
+				return false;
+
+			// Verify the symbol.
+			symbol = symbol.ToUpper();
+			if (!FindSymbol(symbol))
+				return false;
+
+			try
+			{
+				AddSellTransaction(account, symbol, quantity, proceeds, commission, date);
+				AddPrice(symbol, (proceeds + commission) / quantity, date, false); // cost includes commission
+			}
+			catch
+			{
+				return false;
+			}
+
+			SaveDbFile();
+			return true;
+		}
+
 		public UInt32 GetAccountIdFromName(String name)
 		{
 			DataRow[] foundRows = CurrDataSet.Tables["Accounts"].Select("Name = '" + name + "'");

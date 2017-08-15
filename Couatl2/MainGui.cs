@@ -417,7 +417,111 @@ namespace Couatl2
 
 		private void sellSecurityToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			// If there is no account in which to record the transaction,
+			// don't show the dialog box.
+			List<string> accts = AppObj.GetAccountNameList();
+			if (accts.Count == 0)
+			{
+				System.Diagnostics.Debug.WriteLine("Sell Security Transaction Dialog :: No accounts.");
+				MessageBox.Show("ERROR: There are no accounts. Please add an account or open a file that contains an account.", "No Account Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 
+			// Create, populate, and show a SellTransactionDialog.
+			SellTransactionDialog dlg = new SellTransactionDialog();
+			foreach (string name in accts)
+				dlg.AddAccountName(name);
+			dlg.SetAccount(AccountComboBox.SelectedItem);
+
+			do
+			{
+				DialogResult result = dlg.ShowDialog();
+
+				if (result == DialogResult.OK)
+				{
+					System.Diagnostics.Debug.WriteLine("Sell Transaction Dialog :: Save");
+					System.Diagnostics.Debug.WriteLine("Account: " + dlg.GetAccountName());
+					System.Diagnostics.Debug.WriteLine("Symbol: " + dlg.GetSymbol());
+					System.Diagnostics.Debug.WriteLine("Quantity: " + dlg.GetQuantity());
+					System.Diagnostics.Debug.WriteLine("Proceeds: " + dlg.GetProceeds());
+					System.Diagnostics.Debug.WriteLine("Date: " + dlg.GetDate());
+
+					decimal quantity, proceeds, commission;
+
+					// Validate the types of the values that the user provided. 
+					try
+					{
+						quantity = Convert.ToDecimal(dlg.GetQuantity());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Quantity must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+					try
+					{
+						proceeds = Convert.ToDecimal(dlg.GetProceeds());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Total Proceeds must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+					try
+					{
+						commission = Convert.ToDecimal(dlg.GetCommission());
+					}
+					catch
+					{
+						MessageBox.Show("ERROR: Commission must be a decimal number.", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+						continue;
+					}
+
+					DateTime date = dlg.GetDate();
+
+					string account = dlg.GetAccountName();
+
+					string symbol = dlg.GetSymbol().ToUpper();
+					// TODO: Symbol needs to already exist in the Symbols table. If it doesn't, need to ask
+					// the user for the info. That means popping up another dialog. While this is doable,
+					// it seems like a hassle for the user. Would it be possible to save this for later?
+					// Add a Name field to the purchase dialog so that the user can do it at the same time?
+					// The error message would say "unknown symbol, please add name" and that wouldn't be too
+					// bad would it?
+					if (!AppObj.FindSymbol(symbol))
+					{
+						string symName = dlg.GetSymbolName();
+						if (symName == "")
+						{
+							MessageBox.Show("ERROR: Symbol not recognized. Please specify the name of the security.");
+							continue;
+						}
+						if (!AppObj.AddNewSecurity(symbol, symName))
+						{
+							MessageBox.Show("ERROR adding new symbol. Try again.");
+							continue;
+						}
+					}
+
+					// Update the database with the details of this sale.
+					if (AppObj.ProcessSellTransaction(account, symbol, quantity, proceeds, commission, date))
+					{
+						// update Account tab
+						UpdateAccountTransactionsView();
+						UpdateAccountPositionsView();
+
+						break;
+					}
+
+					MessageBox.Show("ERROR: Could not process transaction. Please check for errors in the input data.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				else
+					break;
+
+			} while (true);
 		}
 	}
 }
