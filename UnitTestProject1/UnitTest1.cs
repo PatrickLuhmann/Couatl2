@@ -135,6 +135,17 @@ namespace UnitTestProject1
 			newXact["Account"] = acctID_GAPT;
 			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
 
+			date = new DateTime(2017, 1, 12);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Buy;
+			newXact["Security"] = secID_FUD;
+			newXact["Quantity"] = 1000;
+			newXact["Value"] = 1000.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
 			date = new DateTime(2017, 1, 11);
 			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
 			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Sell;
@@ -145,12 +156,71 @@ namespace UnitTestProject1
 			newXact["Date"] = date;
 			newXact["Account"] = acctID_GAPT;
 			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
+			date = new DateTime(2017, 2, 12);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Sell;
+			newXact["Security"] = secID_FUD;
+			newXact["Quantity"] = 400;
+			newXact["Value"] = 440.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
+			date = new DateTime(2017, 3, 12);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Buy;
+			newXact["Security"] = secID_FUD;
+			newXact["Quantity"] = 2000;
+			newXact["Value"] = 1000.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
+			date = new DateTime(2017, 4, 12);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Sell;
+			newXact["Security"] = secID_FUD;
+			newXact["Quantity"] = 1500;
+			newXact["Value"] = 440.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
+			date = new DateTime(2017, 5, 12);
+			newXact = testApp2.CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = (UInt32)Couatl2App.TransactionType.Sell;
+			newXact["Security"] = secID_FUD;
+			newXact["Quantity"] = 1100;
+			newXact["Value"] = 440.00M;
+			newXact["Fee"] = 7.00M;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID_GAPT;
+			testApp2.CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+
 		}
 
 		[TestCleanup]
 		public void Clean()
 		{
 			testApp2.CloseDbFile();
+		}
+
+		[TestMethod]
+		public void AddSell_ExistsSellAll()
+		{
+			int beforeCount = testApp2.CurrDataSet.Tables["Transactions"].Rows.Count;
+
+			DateTime date = new DateTime(2017, 08, 15);
+			testApp2.AddSellTransaction("GAPT", "XYZ", 60, 893.05M, 6.95M, date);
+
+			Assert.AreEqual(beforeCount + 1, testApp2.CurrDataSet.Tables["Transactions"].Rows.Count);
+
+			DataTable dstPosTable = testApp2.GetAccountPositionTable("GAPT");
+			Assert.AreEqual(0, dstPosTable.Rows.Count);
 		}
 
 		[TestMethod]

@@ -478,6 +478,7 @@ namespace Couatl2
 		/// <param name="symbol">The ticket symbol of the security.</param>
 		/// <param name="quantity">The number of shares of the security.</param>
 		/// <param name="cost">The total cost of the security.</param>
+		/// <param name="commission">The amount of the commission.</param>
 		/// <param name="date">The date on which the security was purchased.</param>
 		public void AddPurchaseTransaction(string accountName, string symbol, decimal quantity, 
 			decimal cost, decimal commission, DateTime date)
@@ -497,6 +498,41 @@ namespace Couatl2
 			newXact["Security"] = secID;
 			newXact["Quantity"] = quantity;
 			newXact["Value"] = cost;
+			newXact["Fee"] = commission;
+			newXact["Date"] = date;
+			newXact["Account"] = acctID;
+			CurrDataSet.Tables["Transactions"].Rows.Add(newXact);
+		}
+
+		/// <summary>
+		/// Add a sell transaction to the database
+		/// 
+		/// This method does not do any error checking. It assumes that the account and the symbol
+		/// are already present in the database. It assumes that the function parameter values
+		/// are reasonable and make sense within the context of the database.
+		/// 
+		/// This method does not catch any exceptions.
+		/// </summary>
+		/// <param name="accountName">The name of the account.</param>
+		/// <param name="symbol">The ticket symbol of the security.</param>
+		/// <param name="quantity">The number of shares of the security.</param>
+		/// <param name="proceeds">The total amount deposited into the account (after commission).</param>
+		/// <param name="commission">The amount of the commission.</param>
+		/// <param name="date">The date on which the security was purchased.</param>
+		public void AddSellTransaction(string accountName, string symbol, decimal quantity,
+			decimal proceeds, decimal commission, DateTime date)
+		{
+			// Find the ID of the account.
+			UInt32 acctID = GetAccountIdFromName(accountName);
+
+			// Find the ID of the symbol.
+			UInt32 secID = GetSecurityIdFromSymbol(symbol);
+
+			DataRow newXact = CurrDataSet.Tables["Transactions"].NewRow();
+			newXact["Type"] = TransactionType.Sell;
+			newXact["Security"] = secID;
+			newXact["Quantity"] = quantity;
+			newXact["Value"] = proceeds;
 			newXact["Fee"] = commission;
 			newXact["Date"] = date;
 			newXact["Account"] = acctID;
@@ -742,21 +778,27 @@ namespace Couatl2
 				tgtPos["Quantity"] = qtyCurr;
 			}
 
-			// Go through the positions and remove any security that has
-			// a quantity of 0, which represents something that has been
-			// completely sold off.
 
 			// Go through the positions and look up the most recent price for
 			// each security. Multiply this by the quantity of the security to
 			// get the value.
-			foreach(DataRow posRow in tblPositions.Rows)
+			// NOTE: AcceptChanges() is required here so that we can invoke Delete()
+			// within the foreach loop. Otherwise, and exception will be thrown.
+			tblPositions.AcceptChanges();
+			foreach (DataRow posRow in tblPositions.Rows)
 			{
 				decimal qty = Convert.ToDecimal(posRow["Quantity"]);
+				if (qty == 0)
+					posRow.Delete();
+				else
+				{
+					decimal price = GetPrice(posRow["Security"].ToString());
 
-				decimal price = GetPrice(posRow["Security"].ToString());
-
-				posRow["Value"] = qty * price;
+					posRow["Value"] = qty * price;
+				}
+				
 			}
+			tblPositions.AcceptChanges();
 
 			return tblPositions;
 		}

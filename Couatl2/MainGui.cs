@@ -414,5 +414,10 @@ namespace Couatl2
 
 			} while (true);
 		}
+
+		private void sellSecurityToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

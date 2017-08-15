@@ -186,6 +186,7 @@
 			this.sellSecurityToolStripMenuItem.Name = "sellSecurityToolStripMenuItem";
 			this.sellSecurityToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.sellSecurityToolStripMenuItem.Text = "Sell Security";
+			this.sellSecurityToolStripMenuItem.Click += new System.EventHandler(this.sellSecurityToolStripMenuItem_Click);
 			// 
 			// recordCashDividendToolStripMenuItem
 			// 
