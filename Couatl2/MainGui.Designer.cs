@@ -28,6 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,6 +65,8 @@
 			this.labelAccount = new System.Windows.Forms.Label();
 			this.SecurityTab = new System.Windows.Forms.TabPage();
 			this.label3 = new System.Windows.Forms.Label();
+			this.labelCash = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.MainMenuStrip.SuspendLayout();
 			this.MainTabControl.SuspendLayout();
 			this.SummaryTab.SuspendLayout();
@@ -305,6 +309,8 @@
 			// 
 			// AccountTab
 			// 
+			this.AccountTab.Controls.Add(this.label1);
+			this.AccountTab.Controls.Add(this.labelCash);
 			this.AccountTab.Controls.Add(this.labelTransactions);
 			this.AccountTab.Controls.Add(this.AccountTransactionsView);
 			this.AccountTab.Controls.Add(this.AccountPositionsView);
@@ -348,20 +354,47 @@
 			// 
 			this.AccountPositionsView.AllowUserToAddRows = false;
 			this.AccountPositionsView.AllowUserToDeleteRows = false;
+			this.AccountPositionsView.AllowUserToResizeColumns = false;
 			this.AccountPositionsView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+			this.AccountPositionsView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.AccountPositionsView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.AccountPositionsView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.AccountPositionsView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+			this.AccountPositionsView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(187)))), ((int)(((byte)(237)))));
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.Color.DarkBlue;
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(187)))), ((int)(((byte)(237)))));
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.DarkBlue;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.AccountPositionsView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this.AccountPositionsView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.AccountPositionsView.Location = new System.Drawing.Point(10, 91);
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(232)))), ((int)(((byte)(249)))));
+			dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Blue;
+			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(232)))), ((int)(((byte)(249)))));
+			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Blue;
+			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			this.AccountPositionsView.DefaultCellStyle = dataGridViewCellStyle2;
+			this.AccountPositionsView.EnableHeadersVisualStyles = false;
+			this.AccountPositionsView.GridColor = System.Drawing.Color.Red;
+			this.AccountPositionsView.Location = new System.Drawing.Point(10, 117);
+			this.AccountPositionsView.MultiSelect = false;
 			this.AccountPositionsView.Name = "AccountPositionsView";
 			this.AccountPositionsView.ReadOnly = true;
 			this.AccountPositionsView.RowHeadersVisible = false;
-			this.AccountPositionsView.Size = new System.Drawing.Size(413, 634);
+			this.AccountPositionsView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+			this.AccountPositionsView.Size = new System.Drawing.Size(413, 608);
 			this.AccountPositionsView.TabIndex = 4;
+			this.AccountPositionsView.TabStop = false;
 			// 
 			// labelPositions
 			// 
 			this.labelPositions.AutoSize = true;
-			this.labelPositions.Location = new System.Drawing.Point(6, 64);
+			this.labelPositions.Location = new System.Drawing.Point(8, 91);
 			this.labelPositions.Name = "labelPositions";
 			this.labelPositions.Size = new System.Drawing.Size(96, 23);
 			this.labelPositions.TabIndex = 3;
@@ -403,6 +436,24 @@
 			this.label3.Size = new System.Drawing.Size(68, 23);
 			this.label3.TabIndex = 0;
 			this.label3.Text = "label3";
+			// 
+			// labelCash
+			// 
+			this.labelCash.AutoSize = true;
+			this.labelCash.Location = new System.Drawing.Point(8, 64);
+			this.labelCash.Name = "labelCash";
+			this.labelCash.Size = new System.Drawing.Size(56, 23);
+			this.labelCash.TabIndex = 7;
+			this.labelCash.Text = "Cash";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(358, 64);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(65, 23);
+			this.label1.TabIndex = 8;
+			this.label1.Text = "$0.00";
 			// 
 			// MainGui
 			// 
@@ -472,6 +523,8 @@
 		private System.Windows.Forms.ToolStripMenuItem buySecurityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem sellSecurityToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem recordCashDividendToolStripMenuItem;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label labelCash;
 	}
 }
 
